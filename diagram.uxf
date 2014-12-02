@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>80</x>
+      <y>50</y>
+      <w>310</w>
+      <h>370</h>
+    </coordinates>
+    <panel_attributes>Договор
+--
+Номер договора: int
+Дополнительное соглашение: string
+Генеральный заказчик: belongs_to
+Иностранные заказчики: has_many
+Вид работ: string
+Тема: string
+Наименование работ: string
+Начало работ: date
+Окончание работ: date
+Количество: int
+Цена за единицу: decimal
+Цена договора: decimal
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

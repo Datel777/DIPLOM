@@ -1,0 +1,18 @@
+#!/bin/bash
+git init
+
+git add * 
+git commit -m 'Initialization'
+git remote add origin https://github.com/Datel777/DIPLOM.git
+git push -u origin master
+
+#git clone origin https://github.com/Datel777/DIPLOM.git  - забрать все
+#git pull origin https://github.com/Datel777/DIPLOM.git  - забрать изменения
+
+
+#touch README.md
+#git init
+#git add README.md
+#git commit -m "first commit"
+#git remote add origin https://github.com/Datel777/DIPLOM.git
+#git push -u origin master
