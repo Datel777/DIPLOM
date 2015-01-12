@@ -1,0 +1,175 @@
+
+CREATE TABLE Client
+(
+	Name varchar(20)  NOT NULL ,
+	Foreign bit  NULL 
+)
+go
+
+
+ALTER TABLE Client
+	ADD CONSTRAINT XPKClient PRIMARY KEY  CLUSTERED (Name ASC)
+go
+
+
+CREATE TABLE Document
+(
+	Additional_Agree text  NULL ,
+	Number integer  NOT NULL ,
+	C varchar(20)  NOT NULL ,
+	Work_Type varchar(20)  NOT NULL ,
+	Theme varchar(20)  NULL ,
+	Work_Name varchar(20)  NULL ,
+	Work_Start datetime  NOT NULL ,
+	Work_End datetime  NULL ,
+	Quantity integer  NOT NULL ,
+	Price money  NOT NULL ,
+	Price_Type integer  NOT NULL ,
+	Self_Work money  NULL ,
+	Volume_KA money  NULL ,
+	Planned_labour float  NULL ,
+	Fact_Labour float  NULL ,
+	Page integer  NULL ,
+	Director varchar(20)  NOT NULL ,
+	Notation text  NULL 
+)
+go
+
+
+ALTER TABLE Document
+	ADD CONSTRAINT XPKDocument PRIMARY KEY  CLUSTERED (Number ASC)
+go
+
+
+CREATE TABLE Document_Performer
+(
+	D integer  NOT NULL ,
+	P varchar(20)  NULL 
+)
+go
+
+
+ALTER TABLE Document_Performer
+	ADD CONSTRAINT XPKDocument_Performer PRIMARY KEY  CLUSTERED (D ASC)
+go
+
+
+CREATE TABLE Document_Stage
+(
+	D integer  NOT NULL ,
+	Stage integer  NOT NULL ,
+	Work_Start datetime  NOT NULL ,
+	Work_End datetime  NOT NULL ,
+	Quantity integer  NOT NULL ,
+	Price money  NOT NULL ,
+	Price_Type integer  NULL ,
+	Conclusion text  NULL ,
+	Prepayment money  NOT NULL ,
+	Account money  NOT NULL ,
+	Planned_Labour float  NOT NULL ,
+	Fact_Labour float  NOT NULL ,
+	Status integer  NOT NULL ,
+	Act integer  NOT NULL ,
+	Certificate varchar(20)  NOT NULL 
+)
+go
+
+
+ALTER TABLE Document_Stage
+	ADD CONSTRAINT XPKDocument_Stage PRIMARY KEY  CLUSTERED (D ASC)
+go
+
+
+CREATE TABLE Economical_Indicator
+(
+	D_P integer  NOT NULL ,
+	Year integer  NOT NULL ,
+	ROT money  NOT NULL ,
+	Insurance float  NOT NULL ,
+	Costs float  NOT NULL ,
+	Profit float  NOT NULL ,
+	Labor_limit float  NOT NULL 
+)
+go
+
+
+ALTER TABLE Economical_Indicator
+	ADD CONSTRAINT XPKEconomical_Indicator PRIMARY KEY  CLUSTERED (D_P ASC)
+go
+
+
+CREATE TABLE Material_Assets
+(
+	D_S integer  NOT NULL ,
+	Name varchar(20)  NOT NULL ,
+	Price money  NOT NULL ,
+	Address varchar(20)  NULL ,
+	Documents_Future varchar(20)  NULL ,
+	Act varchar(20)  NOT NULL ,
+	Bill varchar(20)  NULL 
+)
+go
+
+
+ALTER TABLE Material_Assets
+	ADD CONSTRAINT XPKMaterial_Assets PRIMARY KEY  CLUSTERED (D_S ASC)
+go
+
+
+CREATE TABLE Performer
+(
+	Name varchar(20)  NOT NULL 
+)
+go
+
+
+ALTER TABLE Performer
+	ADD CONSTRAINT XPKPerformer PRIMARY KEY  CLUSTERED (Name ASC)
+go
+
+
+
+ALTER TABLE Document
+	ADD CONSTRAINT  R_3 FOREIGN KEY (C) REFERENCES Client(Name)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+
+
+ALTER TABLE Document_Performer
+	ADD CONSTRAINT  R_5 FOREIGN KEY (D) REFERENCES Document(Number)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE Document_Performer
+	ADD CONSTRAINT  R_7 FOREIGN KEY (P) REFERENCES Performer(Name)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+
+
+ALTER TABLE Document_Stage
+	ADD CONSTRAINT  R_11 FOREIGN KEY (D) REFERENCES Document(Number)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+
+
+ALTER TABLE Economical_Indicator
+	ADD CONSTRAINT  R_9 FOREIGN KEY (D_P) REFERENCES Document_Performer(D)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+
+
+ALTER TABLE Material_Assets
+	ADD CONSTRAINT  R_12 FOREIGN KEY (D_S) REFERENCES Document_Stage(D)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+

@@ -1,0 +1,25 @@
+c:\users\самсунг\documents\visual studio 2012\Projects\Diplomaster\Diplomaster\bin\Debug\Diplomaster.exe.config
+c:\users\самсунг\documents\visual studio 2012\Projects\Diplomaster\Diplomaster\bin\Debug\Diplomaster.exe
+c:\users\самсунг\documents\visual studio 2012\Projects\Diplomaster\Diplomaster\bin\Debug\Diplomaster.pdb
+c:\users\самсунг\documents\visual studio 2012\Projects\Diplomaster\Diplomaster\obj\Debug\Diplomaster.csprojResolveAssemblyReference.cache
+c:\users\самсунг\documents\visual studio 2012\Projects\Diplomaster\Diplomaster\obj\Debug\Diplomaster.Form1.resources
+c:\users\самсунг\documents\visual studio 2012\Projects\Diplomaster\Diplomaster\obj\Debug\Diplomaster.Properties.Resources.resources
+c:\users\самсунг\documents\visual studio 2012\Projects\Diplomaster\Diplomaster\obj\Debug\Diplomaster.csproj.GenerateResource.Cache
+c:\users\самсунг\documents\visual studio 2012\Projects\Diplomaster\Diplomaster\obj\Debug\Diplomaster.exe
+c:\users\самсунг\documents\visual studio 2012\Projects\Diplomaster\Diplomaster\obj\Debug\Diplomaster.pdb
+c:\users\самсунг\documents\visual studio 2012\Projects\Diplomaster\Diplomaster\obj\Debug\Diplomaster.Form2.resources
+C:\Users\самсунг\documents\visual studio 2012\Projects\Diplomaster\Diplomaster\obj\Debug\Diplomaster.Form3.resources
+C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\bin\Debug\Diplomaster.exe.config
+C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.exe
+C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.pdb
+C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\bin\Debug\Database.sdf
+C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\bin\Debug\Diplomaster.exe
+C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\bin\Debug\Diplomaster.pdb
+C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.csprojResolveAssemblyReference.cache
+C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.Form1.resources
+C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.Form2.resources
+C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.Form3.resources
+C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.FormSearch.resources
+C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.Properties.Resources.resources
+C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.csproj.GenerateResource.Cache
+C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.FormDocument.resources
