@@ -19,12 +19,11 @@ namespace Diplomaster
         {
             this.listBox1.Items.Clear();
 
-            string connectionString = "Data Source=Database.sdf";
             string query = "SELECT [Номер] FROM Договор ORDER BY [Номер] ASC"; //, [Генеральный Заказчик]
             
             //SqlCeCommand cmd = new SqlCeCommand(query, conn);
-            
-            using (SqlCeConnection conn = new SqlCeConnection(connectionString))
+
+            using (SqlCeConnection conn = new SqlCeConnection(Global.ConnectionString))
             {
                 conn.Open();
                 SqlCeCommand cmd = new SqlCeCommand(query, conn);
@@ -53,21 +52,44 @@ namespace Diplomaster
             Doc.Text = "Новый договор";
             Doc.Show();
         }
-        public void OpenEditDocForm(Int32 index)
+        public void OpenEditDocForm(int index)
         {
-            Int32 number = Convert.ToInt32(this.listBox1.Items[index]);
+            int number = Convert.ToInt32(this.listBox1.Items[index]);
             //MessageBox.Show(Convert.ToString(number));
             
             FormDocument Doc = new FormDocument(this, number);
-            Doc.DocNumber = number;
             //MessageBox.Show(Convert.ToString(Doc.DocNumber));
             Doc.Show();
+            
+        }
+
+        public void CheckOpenForm(int index) {
+            int number = Convert.ToInt32(this.listBox1.Items[index]);
+            //MessageBox.Show(Convert.ToString(number));
+            bool notfound = true;
+
+            foreach (FormDocument form in Application.OpenForms.OfType<FormDocument>())
+            {
+                //MessageBox.Show(Convert.ToString(form.DocNumber));
+                if (form.DocNumber == number)
+                {
+                    form.Activate();
+                    notfound = false;
+                    break;
+                }
+            }
+
+            if (notfound)
+            {
+                FormDocument Doc = new FormDocument(this, number);
+                //MessageBox.Show(Convert.ToString(Doc.DocNumber));
+                Doc.Show();
+            }
         }
 
         public Form1()
         {
             InitializeComponent();
-
             RefreshListbox();
         }
 
@@ -75,12 +97,7 @@ namespace Diplomaster
         {
             int index = this.listBox1.IndexFromPoint(e.Location);
             if (index != -1)
-            {
-                //MessageBox.Show(index.ToString());
-                OpenEditDocForm(index);
-            }
-            //listBox1.Items.Add("sss");
-            
+                CheckOpenForm(index);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -93,40 +110,12 @@ namespace Diplomaster
             //MessageBox.Show(textBox1.Text + " --> " + listBox1.FindString(textBox1.Text));
             if (textBox1.Text != string.Empty)
             {
-                Int32 num;
+                int num;
 
                 if ((num = listBox1.FindString(textBox1.Text)) != -1)
                     //OpenEditDocForm(num);
-                    listBox1.SetSelected(num,true);
+                    listBox1.SetSelected(num, true);
             }
-            /*
-            string connectionString = "Data Source=Database.sdf";
-            string query = "SELECT [Номер] FROM Договор WHERE [Номер]=" + num; //, [Генеральный Заказчик]
-            
-            //SqlCeCommand cmd = new SqlCeCommand(query, conn);
-            
-            using (SqlCeConnection conn = new SqlCeConnection(connectionString))
-            {
-                conn.Open();
-                SqlCeCommand cmd = new SqlCeCommand(query, conn);
-                using (SqlCeDataReader rdr = cmd.ExecuteReader())
-                {
-                    try
-                    {
-                        if (rdr.Read())
-                        {
-                            string s;
-                            s = Convert.ToString(rdr.GetInt32(0));
-                        }
-                    }
-                    finally
-                    {
-                        rdr.Close();
-                        conn.Close();
-                    }
-                }
-            }
-            */
         }
 
         private void button3_Click(object sender, EventArgs e)
