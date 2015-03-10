@@ -16,7 +16,7 @@ namespace Diplomaster
     public partial class FormDocument : Form
     {
         public int DocNumber;
-        public Form1 FormParent;
+        public FormStart FormParent;
         public Hashtable DATA = new Hashtable();
 
         public bool RemoveImage1 = false;
@@ -475,7 +475,7 @@ namespace Diplomaster
             }
         }
 
-        public FormDocument(Form1 form1, int num = -1)
+        public FormDocument(FormStart form1, int num = -1)
         {
             InitializeComponent();
             DocNumber = num;

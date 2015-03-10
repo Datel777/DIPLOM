@@ -26,7 +26,7 @@ namespace Diplomaster
             //MessageBox.Show(AppDomain.CurrentDomain.BaseDirectory);
             SqlCeEngine engine = new SqlCeEngine(Global.ConnectionString);
             if (engine.Verify()) {
-                Application.Run(new Form1());
+                Application.Run(new FormStart());
             } else {
                 MessageBox.Show("Database is corrupted.");
                 engine.Repair(null, RepairOption.RecoverAllPossibleRows);
@@ -43,7 +43,7 @@ namespace Diplomaster
         public static Color ColorTextNormal = SystemColors.WindowText;
         //public static Color ColorTextFile = Color.Red;
         public static DateTime MinDate = new DateTime(1753,1,1);
-        public static string ConnectionString = @"Data Source = C:\Users\самсунг\Documents\МГИУ\DIPLOM\Diplomaster\Diplomaster\Database.sdf";
+        public static string ConnectionString = @"Data Source = ..\..\Database.sdf";
     }
 
     static class Validator
