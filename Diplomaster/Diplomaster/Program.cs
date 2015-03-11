@@ -24,13 +24,18 @@ namespace Diplomaster
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             //MessageBox.Show(AppDomain.CurrentDomain.BaseDirectory);
-            SqlCeEngine engine = new SqlCeEngine(Global.ConnectionString);
-            if (engine.Verify()) {
-                Application.Run(new FormStart());
-            } else {
-                MessageBox.Show("Database is corrupted.");
-                engine.Repair(null, RepairOption.RecoverAllPossibleRows);
-            }
+
+            Application.Run(new FormStart());
+            //SqlCeEngine engine = new SqlCeEngine(Global.ConnectionString);
+            //if (engine.Verify())
+            //{
+            //    Application.Run(new FormStart());
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Database is corrupted.");
+            //    engine.Repair(null, RepairOption.RecoverAllPossibleRows);
+            //}
         }
     }
 
@@ -43,7 +48,14 @@ namespace Diplomaster
         public static Color ColorTextNormal = SystemColors.WindowText;
         //public static Color ColorTextFile = Color.Red;
         public static DateTime MinDate = new DateTime(1753,1,1);
-        public static string ConnectionString = @"Data Source = ..\..\Database.sdf";
+        //public static string ConnectionString = @"Data Source = ..\..\Database.sdf";
+        //public static string ConnectionString = @"Data Source = ..\..\..\connection.udl";
+
+        public static string ConnectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\DataBase.mdf;Integrated Security=True";
+        //public static string ConnectionString = @"Server=(LocalDB)\MSSQLLocalDB; Integrated Security=true ;AttachDbFileName=C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\DataBase.mdf";
+        
+        
+        //Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\DataBase.mdf;Integrated Security=True
     }
 
     static class Validator

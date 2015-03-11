@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SqlServerCe;
+//using System.Data.SqlServerCe;
+using System.Data.SqlClient;
 using System.Collections;
 using System.IO;
 
@@ -29,15 +30,15 @@ namespace Diplomaster
             if (arg1 != null)
                 query += " WHERE [" + arg1 + "] = @ARG1";
 
-            using (SqlCeConnection conn = new SqlCeConnection(Global.ConnectionString))
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
             {
                 conn.Open();
-                SqlCeCommand cmd = new SqlCeCommand(query, conn);
+                SqlCommand cmd = new SqlCommand(query, conn);
 
                 if (arg1 != null)
                     cmd.Parameters.AddWithValue("@ARG1", val1);
 
-                using (SqlCeDataReader rdr = cmd.ExecuteReader())
+                using (SqlDataReader rdr = cmd.ExecuteReader())
                 {
                     try
                     {
@@ -67,15 +68,15 @@ namespace Diplomaster
             if (arg1 != null)
                 query += " WHERE [" + arg1 + "] = @ARG1";
 
-            using (SqlCeConnection conn = new SqlCeConnection(Global.ConnectionString))
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
             {
                 conn.Open();
-                SqlCeCommand cmd = new SqlCeCommand(query, conn);
+                SqlCommand cmd = new SqlCommand(query, conn);
 
                 if (arg1 != null)
                     cmd.Parameters.AddWithValue("@ARG1", val1);
 
-                using (SqlCeDataReader rdr = cmd.ExecuteReader())
+                using (SqlDataReader rdr = cmd.ExecuteReader())
                 {
                     try
                     {
@@ -104,13 +105,13 @@ namespace Diplomaster
             string query = "SELECT [id], [Название] FROM [Заказчик] WHERE [Иностранный] = @F";// WHERE [Иностранный]=0
             
             if (number == -1) {
-                using (SqlCeConnection conn = new SqlCeConnection(Global.ConnectionString))
+                using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
                 {
                     conn.Open();
-                    SqlCeCommand cmd = new SqlCeCommand(query, conn);
+                    SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@F", true);
 
-                    using (SqlCeDataReader rdr = cmd.ExecuteReader())
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
                     {
                         try
                         {
@@ -136,13 +137,13 @@ namespace Diplomaster
 
                 Hashtable hash = new Hashtable();
 
-                using (SqlCeConnection conn = new SqlCeConnection(Global.ConnectionString)) {
+                using (SqlConnection conn = new SqlConnection(Global.ConnectionString)) {
                     conn.Open();
 
-                    SqlCeCommand cmd2 = new SqlCeCommand(query2, conn);
+                    SqlCommand cmd2 = new SqlCommand(query2, conn);
                     cmd2.Parameters.AddWithValue("@NUM", number);
 
-                    using (SqlCeDataReader rdr = cmd2.ExecuteReader()) {
+                    using (SqlDataReader rdr = cmd2.ExecuteReader()) {
                         try {
                             while (rdr.Read())
                                 hash.Add(rdr.GetInt32(0), true);
@@ -155,10 +156,10 @@ namespace Diplomaster
 
 
 
-                    SqlCeCommand cmd = new SqlCeCommand(query, conn);
+                    SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@F", true);
 
-                    using (SqlCeDataReader rdr = cmd.ExecuteReader())
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
                     {
                         try
                         {
@@ -193,15 +194,15 @@ namespace Diplomaster
         {
             string query = "SELECT * FROM [Договор] WHERE [Номер]=@NUM";
 
-            using (SqlCeConnection conn = new SqlCeConnection(Global.ConnectionString))
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
             {
-                using (SqlCeCommand cmd = new SqlCeCommand(query, conn))
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@NUM", DocNumber);
                     try
                     {
                         conn.Open();
-                        using (SqlCeDataReader rdr = cmd.ExecuteReader())
+                        using (SqlDataReader rdr = cmd.ExecuteReader())
                         {
                             if (rdr.Read())
                             {
@@ -347,38 +348,38 @@ namespace Diplomaster
         {
             textBox1.Text = Convert.ToString(DocNumber);
 
-            SelectCombo(comboBox1, DATA["Генеральный Заказчик"]);
+            SelectCombo(comboBox1, DATA["Генеральный заказчик"]);
             SelectList(listBox1, DATA["Инозаказчик"]);
-            SelectList(listBox2, DATA["Исполнитель Договора"]);
+            SelectList(listBox2, DATA["Исполнитель договора"]);
 
-            FillTextBox(textBox16, DATA["Дополнительное Соглашение"]);
-            FillTextBox(textBox2, DATA["Вид Работ"]);
+            FillTextBox(textBox16, DATA["Дополнительное соглашение"]);
+            FillTextBox(textBox2, DATA["Вид работ"]);
             FillTextBox(textBox5, DATA["Тема"]);
-            FillTextBox(textBox6, DATA["Наименование Работ"]);
+            FillTextBox(textBox6, DATA["Наименование работ"]);
             FillTextBoxInt(textBox7, DATA["Количество"]);
             FillTextBoxDecimal(textBox8, DATA["Цена"]);
-            FillTextBoxDecimal(textBox9, DATA["Цена За Единицу"]);
-            FillTextBoxInt(textBox10, DATA["Модель Цены"]);
-            FillTextBoxFloat(textBox11, DATA["Объём Собственной Работы"]);
+            FillTextBoxDecimal(textBox9, DATA["Цена за единицу"]);
+            FillTextBoxInt(textBox10, DATA["Модель цены"]);
+            FillTextBoxFloat(textBox11, DATA["Объём собственной работы"]);
             FillTextBoxFloat(textBox12, DATA["Объём КА"]);
-            FillTextBoxFloat(textBox13, DATA["Плановая Трудоёмкость"]);
-            FillTextBoxFloat(textBox14, DATA["Фактическая Трудоёмкость"]);
+            FillTextBoxFloat(textBox13, DATA["Плановая трудоёмкость"]);
+            FillTextBoxFloat(textBox14, DATA["Фактическая трудоёмкость"]);
             FillTextBoxInt(textBox15, DATA["Страница"]);
             FillTextBox(textBox3, DATA["Ведущий"]);
             FillTextBox(textBox4, DATA["Примечание"]);
 
-            FillImageSet(textBoxImg1N, textBoxImg1, buttonImg1_1, buttonImg1_2, buttonImg1_3, DATA["Изображение1"], DATA["Имя Изображения1"]);
-            FillImageSet(textBoxImg2N, textBoxImg2, buttonImg2_1, buttonImg2_2, buttonImg2_3, DATA["Изображение2"], DATA["Имя Изображения2"]);
+            FillImageSet(textBoxImg1N, textBoxImg1, buttonImg1_1, buttonImg1_2, buttonImg1_3, DATA["Изображение1"], DATA["Имя изображения1"]);
+            FillImageSet(textBoxImg2N, textBoxImg2, buttonImg2_1, buttonImg2_2, buttonImg2_3, DATA["Изображение2"], DATA["Имя изображения2"]);
 
-            FillDateTimePicker(dateTimePicker1, DATA["Начало Работ"]);
-            FillDateTimePicker(dateTimePicker2, DATA["Окончание Работ"]);
+            FillDateTimePicker(dateTimePicker1, DATA["Начало работ"]);
+            FillDateTimePicker(dateTimePicker2, DATA["Окончание работ"]);
         }
 
-        public int[] ReadToArray(SqlCeCommand cmd)
+        public int[] ReadToArray(SqlCommand cmd)
         {
             int i = 0;
             int[] arr = { };
-            using (SqlCeDataReader rdr = cmd.ExecuteReader())
+            using (SqlDataReader rdr = cmd.ExecuteReader())
             {
                 while (rdr.Read())
                 {
@@ -452,9 +453,9 @@ namespace Diplomaster
         {
             string query = "SELECT [" + what + "] FROM [" + where + "] WHERE [" + arg1 + "] = @NUM";
 
-            using (SqlCeConnection conn = new SqlCeConnection(Global.ConnectionString))
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
             {
-                using (SqlCeCommand cmd = new SqlCeCommand(query, conn))
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@NUM", DocNumber);
                     try
@@ -486,12 +487,12 @@ namespace Diplomaster
             ReadList(listBox2, "Исполнитель", "Название");
 
             if (DocNumber != -1) {
-                Text = "Редактирование Документа №" + DocNumber;
+                Text = "Редактирование Договора №" + DocNumber;
 
                 ReadDoc();
 
-                ReadFrom("Инозаказчик", "Заказчик", "Номер Договора");
-                ReadFrom("Исполнитель Договора", "Исполнитель", "Договор");
+                ReadFrom("Инозаказчик", "Заказчик", "Номер договора");
+                ReadFrom("Исполнитель договора", "Исполнитель", "Договор");
 
                 FillAll();
 
@@ -505,7 +506,7 @@ namespace Diplomaster
 
         }
 
-        private void SaveManyMany(SqlCeConnection conn, int NUM, string where, ListBox list, string arg1, string arg2)
+        private void SaveManyMany(SqlConnection conn, int NUM, string where, ListBox list, string arg1, string arg2)
         {
             int[] Sel = { };
             int[] Insert = { };
@@ -529,7 +530,7 @@ namespace Diplomaster
             {
                 string query2 = "INSERT INTO [" + where + "] ([" + arg1 + "], [" + arg2 + "]) VALUES (@NUM, @VAL)";
 
-                using (SqlCeCommand cmd = new SqlCeCommand(query2, conn))
+                using (SqlCommand cmd = new SqlCommand(query2, conn))
                 {
                     cmd.Parameters.AddWithValue("@NUM", NUM);
 
@@ -563,7 +564,7 @@ namespace Diplomaster
             {
                 string query3 = "DELETE FROM [" + where + "] WHERE [" + arg1 + "] = @NUM AND [" + arg2 + "]= @VAL";
 
-                using (SqlCeCommand cmd = new SqlCeCommand(query3, conn))
+                using (SqlCommand cmd = new SqlCommand(query3, conn))
                 {
                     cmd.Parameters.AddWithValue("@NUM", DocNumber);
 
@@ -658,15 +659,27 @@ namespace Diplomaster
                     NUM = Convert.ToInt32(textBox1.Text);
                 else
                     NUM = DocNumber;
-                using (SqlCeConnection conn = new SqlCeConnection(Global.ConnectionString))
+                using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
                 {
                     string query;
 
                     if (DocNumber == -1)
-                        query = "INSERT INTO [Договор] VALUES (@NUM, @GEN, @VED, @PRI, @VID, @TEMA, @NAIM, " +
+                        query = "INSERT INTO [Договор] VALUES (@NUM, @DOP, @GEN, @VID, @TEMA, @NAIM, " +
                             "@DATE1, @DATE2, @COUNT, @PRICE, @PRICE2, @MODEL, @VOL, @VOL2, @TRUD, @TRUD2, @PAGE, "+
-                            "@IMGNAME1, @IMGNAME2, @IMG1, @IMG2, @DOP)";
-                    else
+                            "@VED, @PRI, @IMG1, @IMGNAME1, @IMG2, @IMGNAME2, @EDIT)";
+                    else//
+                        query = "UPDATE [Договор] SET " +
+                            "[Дополнительное Соглашение]=@DOP, [Генеральный заказчик]=@GEN, " +
+                            "[Вид работ]=@VID, [Тема]=@TEMA, [Наименование работ]=@NAIM " +
+                            "[Начало работ]=@DATE1, [Окончание работ]=@DATE2, " +
+                            "[Количество]=@COUNT, [Цена]=@PRICE, [Цена за единицу]=@PRICE2, [Модель цены]=@MODEL, " +
+                            "[Объём собственной работы]=@VOL, [Объём КА]=@VOL2, " +
+                            "[Плановая трудоёмкость]=@TRUD, [Фактическая трудоёмкость]=@TRUD2, " +
+                            "[Страница]=@PAGE, [Ведущий]=@VED, [Примечание]=@PRI, " +
+                            "[Изображение1]=@IMG1, [Имя изображения1]=@IMGNAME1, [Изображение2]=@IMG2, [Имя изображения2]=@IMGNAME2, " +
+                            "[Редактируется]=@EDIT WHERE [Номер]=@NUM";
+
+                        /*
                         query = "UPDATE [Договор] SET " +
                             "[Генеральный Заказчик]=@GEN, [Ведущий]=@VED, [Примечание]=@PRI, " +
                             "[Вид Работ]=@VID, [Тема]=@TEMA, [Наименование Работ]=@NAIM, " +
@@ -677,32 +690,16 @@ namespace Diplomaster
                             "[Имя Изображения1]=@IMGNAME1, [Имя Изображения2]=@IMGNAME2, [Изображение1]=@IMG1, [Изображение2]=@IMG2, " +
                             "[Дополнительное Соглашение]=@DOP " +
                             "WHERE [Номер]=@NUM";
+                        */
+                    
 
-                        /*
-                        query = "UPDATE [Договор] SET " +
-                            "[Генеральный Заказчик]=@GEN, [Дополнительное Соглашение]=@DOP, " +
-                            "[Вид Работ]=@VID, [Тема]=@TEMA, [Наименование работ]=@NAIM " +
-                            "[Начало Работ]=@DATE1, [Окончание Работ]=@DATE2, " +
-                            "[Количество]=@COUNT, [Цена]=@PRICE, [Цена За Единицу]=@PRICE2, [Модель Цены]=@MODEL, " +
-                            "[Объём Собственной Работы]=@VOL, [Объём КА]=@VOL2, " +
-                            "[Плановая Трудоёмкость]=@TRUD, [Фактическая Трудоёмкость]=@TRUD2, " +
-                            "[Страница]=@PAGE, [Ведущий]=@VED, [Примечание]=@PRI, " +
-                            "[Изображение1]=@IMG1, [Имя Изображения1]=@IMGNAME1, [Изображение2]=@IMG2, [Имя Изображения2]=@IMGNAME2 " +
-                            "WHERE [Номер]=@NUM";
-                    */
-
-                    //MessageBox.Show(DATA["Начало Работ"].ToString());
-                    //MessageBox.Show(dateTimePicker1.Value.ToString());
-
-                    using (SqlCeCommand cmd = new SqlCeCommand(query, conn))
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         try
                         {
                             cmd.Parameters.AddWithValue("@NUM", NUM);
-                            cmd.Parameters.AddWithValue("@GEN", CheckNull.Combo(comboBox1));
-                            cmd.Parameters.AddWithValue("@VED", CheckNull.String(textBox3.Text));
-                            cmd.Parameters.AddWithValue("@PRI", CheckNull.String(textBox4.Text));
                             cmd.Parameters.AddWithValue("@DOP", CheckNull.String(textBox16.Text));
+                            cmd.Parameters.AddWithValue("@GEN", CheckNull.Combo(comboBox1));
                             cmd.Parameters.AddWithValue("@VID", CheckNull.String(textBox2.Text));
                             cmd.Parameters.AddWithValue("@TEMA", CheckNull.String(textBox5.Text));
                             cmd.Parameters.AddWithValue("@NAIM", CheckNull.String(textBox6.Text));
@@ -716,13 +713,9 @@ namespace Diplomaster
                             cmd.Parameters.AddWithValue("@VOL2", CheckNull.Float(textBox12.Text));
                             cmd.Parameters.AddWithValue("@TRUD", CheckNull.Float(textBox13.Text));
                             cmd.Parameters.AddWithValue("@TRUD2", CheckNull.Float(textBox14.Text));
-                            cmd.Parameters.AddWithValue("@PAGE", CheckNull.UInt(textBox15.Text));
-
-                            /*
-                            @NUM, @GEN, @VED, @PRI, @VID, @TEMA, @NAIM, " +
-                            "@DATE1, @DATE2, @COUNT, @PRICE, @PRICE2, @MODEL, @VOL, @VOL2, @TRUD, @TRUD2, @PAGE, "+
-                            "@IMGNAME1, @IMGNAME2, @IMG1, @IMG2, @DOP
-                            */
+                            cmd.Parameters.AddWithValue("@PAGE", CheckNull.UInt(textBox7.Text));
+                            cmd.Parameters.AddWithValue("@VED", CheckNull.String(textBox3.Text));
+                            cmd.Parameters.AddWithValue("@PRI", CheckNull.String(textBox4.Text));
 
                             if (RemoveImage1) {
                                 cmd.Parameters.AddWithValue("@IMG1", DBNull.Value);
@@ -764,8 +757,8 @@ namespace Diplomaster
                                     cmd.Parameters.AddWithValue("@IMGNAME2", CheckNull.FileName(Image2, Path.GetFileName(textBoxImg2.Text)));
                                 }
                             }
-                            
 
+                            cmd.Parameters.AddWithValue("@EDIT", false);
 
                             /*
                             if (RemoveImage1 || textBoxImg1.Text == "") {
@@ -793,8 +786,8 @@ namespace Diplomaster
                         }
                     }
 
-                    SaveManyMany(conn, NUM, "Инозаказчик", listBox1, "Номер Договора", "Заказчик");
-                    SaveManyMany(conn, NUM, "Исполнитель Договора", listBox2, "Договор", "Исполнитель");
+                    SaveManyMany(conn, NUM, "Инозаказчик", listBox1, "Номер договора", "Заказчик");
+                    SaveManyMany(conn, NUM, "Исполнитель договора", listBox2, "Договор", "Исполнитель");
 
                 }
                 this.Close();
@@ -812,11 +805,11 @@ namespace Diplomaster
             {
                 string query = "DELETE FROM [Договор] WHERE [Номер]=@ID";
 
-                using (SqlCeConnection conn = new SqlCeConnection(Global.ConnectionString))
+                using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
                 {
                     conn.Open();
 
-                    SqlCeCommand cmd = new SqlCeCommand(query, conn);
+                    SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@ID", DocNumber);
 
                     cmd.ExecuteNonQuery();
@@ -867,7 +860,7 @@ namespace Diplomaster
             saveFileDialog1.InitialDirectory = "C:";
             saveFileDialog1.Filter = "All files (*.*)|*.*";
             saveFileDialog1.RestoreDirectory = true;
-            saveFileDialog1.FileName = (string)DATA["Имя Изображения1"];
+            saveFileDialog1.FileName = (string)DATA["Имя изображения1"];
 
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -943,7 +936,7 @@ namespace Diplomaster
             saveFileDialog1.InitialDirectory = "C:";
             saveFileDialog1.Filter = "All files (*.*)|*.*";
             saveFileDialog1.RestoreDirectory = true;
-            saveFileDialog1.FileName = (string)DATA["Имя Изображения2"];
+            saveFileDialog1.FileName = (string)DATA["Имя изображения2"];
 
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {

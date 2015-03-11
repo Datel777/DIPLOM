@@ -1,138 +1,122 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="13.0">
-  <zoom_level>8</zoom_level>
+<diagram program="umlet" version="13.1">
+  <zoom_level>9</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>600</x>
-      <y>112</y>
-      <w>248</w>
-      <h>224</h>
+      <x>504</x>
+      <y>9</y>
+      <w>279</w>
+      <h>270</h>
     </coordinates>
     <panel_attributes>Этап договора
+bg=light_gray
 --
 Договор: belongs_to
 Номер этапа: int
 Начало работ: date
 Окончание работ: date
 Количество: int
-Цена этапа: decimal
+Цена этапа: money
 Модель цены: int
-Заключение ВПМОРУ?: text
-Аванс: decimal
-Расчёт: decimal
+Заключение ВПМОРУ?: nvarchar(400)
+Аванс: money
+Расчёт: money
 Плановая трудоёмкость: float
 Фактическая трудоёмкость: float
 Текущее состояние: int
 Номер акта: int
-Номер удостоверения: str?</panel_attributes>
+Номер удостоверения: nvarchar(100)
+Учёт материальных ценностей: has_many</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>280</x>
-      <y>112</y>
-      <w>256</w>
-      <h>312</h>
+      <x>108</x>
+      <y>9</y>
+      <w>288</w>
+      <h>405</h>
     </coordinates>
     <panel_attributes>Договор
+bg=orange
 --
-Номер договора: int
-Дополнительное соглашение: string
+Номер: int
+Дополнительное соглашение: nvarchar(100)
 Генеральный заказчик: belongs_to
 Иностранные заказчики: has_many
 Исполнители: has_many
-Вид работ: string
-Тема: string
-Наименование работ: string
+Вид работ: nvarchar(100)
+Тема: nvarchar(100)
+Наименование работ: nvarchar(100)
 Начало работ: date
 Окончание работ: date
 Количество: int
-Цена за единицу: decimal
-Цена договора: decimal
+Цена: money
+Цена за единицу: money
 Модель цены: int
-Объём собственной работы: decimal
-Объём к/а: decimal
+Объём собственной работы: float
+Объём к/а: float
 Плановая трудоёмкость: float
 Фактическая трудоёмкость: float
 Страница: int
-Ведущий (фамилия): string
-Примечание: text
-Учёт материальных ценностей: has_many
+Ведущий (фамилия): nvarchar(100)
+Примечание: nvarchar(400)
+Изображение1: image
+Имя изображения1: nvarchar(100)
+Изображение2: image
+Имя изображения2: nvarchar(100)
+Редактируется: bit
 </panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>160</x>
-      <y>488</y>
-      <w>176</w>
-      <h>48</h>
+      <x>333</x>
+      <y>531</y>
+      <w>225</w>
+      <h>90</h>
     </coordinates>
-    <panel_attributes>Генеральный заказчик
+    <panel_attributes>Юридическое лицо
+bg=orange
 --
-Название: string
-Договор: has_many</panel_attributes>
+Название: nvarchar(100)
+Иностранный: bit
+Договор: has_many
+Исполнители Договора: has_many</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>360</x>
-      <y>488</y>
-      <w>176</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>Иностранный заказчик
---
-Название: string
-Договор: has_many</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>552</x>
-      <y>512</y>
-      <w>208</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>Исполнитель
---
-Название: string
-Исполнители договора: has_many</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>552</x>
-      <y>392</y>
-      <w>240</w>
-      <h>64</h>
+      <x>414</x>
+      <y>333</y>
+      <w>270</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>Исполнители договора
+bg=#3c7a00
 --
 Договор: belongs_to
-Исполнитель: belongs_to
+Юридическое лицо: belongs_to
 Экономические показатели: has_many</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>776</x>
-      <y>512</y>
-      <w>224</w>
-      <h>120</h>
+      <x>567</x>
+      <y>486</y>
+      <w>252</w>
+      <h>135</h>
     </coordinates>
     <panel_attributes>Экономический показатель
+bg=light_gray
 --
 Исполнители договора: belongs_to
 Год: int
-Средне месячный РОТ: decimal
+Средне месячный РОТ: money
 Социальное страхование(%): float
 Накладные расходы(%): float
 Рентабельность(%): float
@@ -142,104 +126,132 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
-      <y>304</y>
-      <w>224</w>
-      <h>120</h>
+      <x>693</x>
+      <y>297</y>
+      <w>252</w>
+      <h>135</h>
     </coordinates>
     <panel_attributes>Учёт материальных ценностей
+bg=light_gray
 --
 Этап договора: belongs_to
-Наименование: string
-Стоимость: decimal
-Местонахождение: string
-Документы(сохр, расп): string
-Акт об изг. мат. ценностей: string
-Накладная: string</panel_attributes>
+Наименование: nvarchar(100)
+Стоимость: money
+Местонахождение: nvarchar(100)
+? Документы(сохр, расп): nvarchar(100)
+Акт об изг. мат. ценностей: nvarchar(100)
+Накладная: nvarchar(100)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>528</x>
-      <y>144</y>
-      <w>88</w>
-      <h>32</h>
+      <x>387</x>
+      <y>45</y>
+      <w>135</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>m2=1
 m1=+</panel_attributes>
-    <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>216</x>
-      <y>328</y>
-      <w>80</w>
-      <h>32</h>
+      <x>774</x>
+      <y>45</y>
+      <w>63</w>
+      <h>270</h>
     </coordinates>
     <panel_attributes>m2=1
 m1=+</panel_attributes>
-    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+    <additional_attributes>40.0;280.0;40.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>304</x>
-      <y>416</y>
-      <w>24</w>
-      <h>88</h>
+      <x>171</x>
+      <y>405</y>
+      <w>180</w>
+      <h>198</h>
     </coordinates>
     <panel_attributes>m2=*
 m1=1</panel_attributes>
-    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+    <additional_attributes>180.0;190.0;10.0;190.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
-      <y>416</y>
-      <w>24</w>
-      <h>88</h>
-    </coordinates>
-    <panel_attributes>m2=*
-m1=*</panel_attributes>
-    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>528</x>
-      <y>352</y>
-      <w>88</w>
-      <h>56</h>
-    </coordinates>
-    <panel_attributes>m2=1
-m1=*</panel_attributes>
-    <additional_attributes>90.0;50.0;90.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>576</x>
-      <y>448</y>
-      <w>24</w>
-      <h>80</h>
+      <x>198</x>
+      <y>405</y>
+      <w>63</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>m2=*
 m1=1</panel_attributes>
-    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0;50.0;80.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>736</x>
-      <y>448</y>
-      <w>88</w>
-      <h>80</h>
+      <x>387</x>
+      <y>225</y>
+      <w>99</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>m2=1
+m1=*</panel_attributes>
+    <additional_attributes>90.0;120.0;90.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>531</x>
+      <y>396</y>
+      <w>27</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>m2=*
+m1=1</panel_attributes>
+    <additional_attributes>10.0;150.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>630</x>
+      <y>396</y>
+      <w>36</w>
+      <h>108</h>
     </coordinates>
     <panel_attributes>m2=1
 m1=+</panel_attributes>
-    <additional_attributes>80.0;80.0;80.0;50.0;10.0;50.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>243</x>
+      <y>441</y>
+      <w>198</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Иностранные заказчики
+bg=#3c7a00
+--
+Договор: belongs_to
+Юридическое лицо: belongs_to</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>432</x>
+      <y>468</y>
+      <w>81</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>m2=*
+m1=1</panel_attributes>
+    <additional_attributes>70.0;70.0;70.0;10.0;10.0;10.0</additional_attributes>
   </element>
 </diagram>

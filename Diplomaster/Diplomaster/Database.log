@@ -5588,3 +5588,42 @@ Scan bad pages ... DONE.
 Parse SysObjects table ... DONE.
 Copy Tables ... DONE.
 
+Header checksum is valid.
+Source      : C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\Database.sdf
+Destination : n/a
+Verifying - verMajor: 4, verMinor: 0, verBuild: 8476, verPoint: 1
+Time - 2015-10-03 17:42:57.915
+
+ All Pages have valid checksum.
+Parse the db file and build list of tables ... DONE.
+Cleanup Page list ... DONE.
+Scan bad pages ... DONE.
+Parse SysObjects table ... DONE.
+Copy Tables ... DONE.
+
+Header checksum is valid.
+Source      : C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\Database.sdf
+Destination : n/a
+Verifying - verMajor: 4, verMinor: 0, verBuild: 8476, verPoint: 1
+Time - 2015-10-03 17:44:00.749
+
+ All Pages have valid checksum.
+Parse the db file and build list of tables ... DONE.
+Cleanup Page list ... DONE.
+Scan bad pages ... DONE.
+Parse SysObjects table ... DONE.
+Copy Tables ... DONE.
+
+Header checksum is valid.
+Source      : C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\Database.sdf
+Destination : n/a
+Verifying - verMajor: 4, verMinor: 0, verBuild: 8476, verPoint: 1
+Time - 2015-10-03 17:58:31.898
+
+ All Pages have valid checksum.
+Parse the db file and build list of tables ... DONE.
+Cleanup Page list ... DONE.
+Scan bad pages ... DONE.
+Parse SysObjects table ... DONE.
+Copy Tables ... DONE.
+

@@ -28,23 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Начинающиеся");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Действующие");
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Закрывающиеся");
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("2015", new System.Windows.Forms.TreeNode[] {
+            treeNode6,
+            treeNode7,
+            treeNode8});
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("2016");
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
+            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
             this.SuspendLayout();
             // 
             // listBox1
             // 
-            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(12, 70);
             this.listBox1.Name = "listBox1";
             this.listBox1.ScrollAlwaysVisible = true;
-            this.listBox1.Size = new System.Drawing.Size(238, 342);
+            this.listBox1.Size = new System.Drawing.Size(107, 342);
             this.listBox1.TabIndex = 0;
             this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
             // 
@@ -85,17 +94,50 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // Form1
+            // treeView1
+            // 
+            this.treeView1.Location = new System.Drawing.Point(125, 70);
+            this.treeView1.Name = "treeView1";
+            treeNode6.Name = "Начинающиеся";
+            treeNode6.Text = "Начинающиеся";
+            treeNode7.Name = "Действующие";
+            treeNode7.Text = "Действующие";
+            treeNode8.Name = "Закрывающиеся";
+            treeNode8.Text = "Закрывающиеся";
+            treeNode9.Name = "2015";
+            treeNode9.Text = "2015";
+            treeNode10.Name = "2016";
+            treeNode10.Text = "2016";
+            this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode9,
+            treeNode10});
+            this.treeView1.Size = new System.Drawing.Size(180, 343);
+            this.treeView1.TabIndex = 5;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Location = new System.Drawing.Point(442, 12);
+            this.tabControl1.Multiline = true;
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(372, 400);
+            this.tabControl1.TabIndex = 6;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            this.tabControl1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tabControl1_MouseClick);
+            // 
+            // FormStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(263, 425);
+            this.ClientSize = new System.Drawing.Size(826, 425);
+            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.treeView1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.listBox1);
-            this.Name = "Form1";
+            this.Name = "FormStart";
             this.Text = "Список Договоров";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -109,6 +151,8 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TabControl tabControl1;
         //private System.Windows.Forms.DataGridViewTextBoxColumn numberDataGridViewTextBoxColumn;
     }
 }

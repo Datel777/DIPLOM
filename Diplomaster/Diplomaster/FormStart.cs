@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SqlServerCe;
+//using System.Data.SqlServerCe;
 using System.Data.SqlClient;
 
 
@@ -15,19 +15,22 @@ namespace Diplomaster
 {
     public partial class FormStart : Form
     {
+        TabPage firstTabPage = new TabPage("Все");
+        TabPage lastTabPage = new TabPage("+");
+
         public void RefreshListbox()
         {
             this.listBox1.Items.Clear();
 
-            string query = "SELECT [Номер] FROM Договор ORDER BY [Номер] ASC"; //, [Генеральный Заказчик]
+            string query = "SELECT [Номер] FROM [Договор] ORDER BY [Номер] ASC"; //, [Генеральный Заказчик]
             
-            //SqlCeCommand cmd = new SqlCeCommand(query, conn);
+            //SqlCommand cmd = new SqlCommand(query, conn);
 
-            using (SqlCeConnection conn = new SqlCeConnection(Global.ConnectionString))
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
             {
                 conn.Open();
-                SqlCeCommand cmd = new SqlCeCommand(query, conn);
-                using (SqlCeDataReader rdr = cmd.ExecuteReader())
+                SqlCommand cmd = new SqlCommand(query, conn);
+                using (SqlDataReader rdr = cmd.ExecuteReader())
                 {
                     try
                     {
@@ -87,10 +90,43 @@ namespace Diplomaster
             }
         }
 
+        public void InitializeTabControl(TabControl tabC)
+        {
+            UserControl myUserControl = new UserControlSearch();
+            myUserControl.Dock = DockStyle.Fill;
+            firstTabPage.Controls.Add(myUserControl);
+            tabC.Controls.Add(firstTabPage);
+
+            tabC.Controls.Add(lastTabPage);
+        }
+
+        public TabPage CreateNewPage(string title = null)
+        {
+            TabPage page;
+            if (String.IsNullOrEmpty(title)) 
+                page = new TabPage("----");
+            else 
+                page = new TabPage(title);
+            
+            UserControl myUserControl = new UserControlSearch();
+            myUserControl.Dock = DockStyle.Fill;
+            page.Controls.Add(myUserControl);
+
+            return page;
+        }
+
         public FormStart()
         {
+            //MessageBox.Show("BEGIN INIT");
             InitializeComponent();
+            InitializeTabControl(tabControl1);
             RefreshListbox();
+            
+            //tabControl1.
+            //tabControl1.Controls.Add();
+            
+            
+
         }
 
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -122,6 +158,44 @@ namespace Diplomaster
         {
             RefreshListbox();
         }
-        
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab == lastTabPage)
+            {
+                TabPage page = CreateNewPage();
+
+                tabControl1.TabPages.Insert(tabControl1.SelectedIndex, page);
+                tabControl1.SelectedTab = page;
+                //MessageBox.Show("GOTCHA!");
+            }
+            //if (tabControl1.SelectedTab == tabControl1.TabCount)//your specific tabname
+            //{
+            //    // your stuff
+            //    MessageBox.Show("GOTCHA!");
+            //}
+        }
+
+        private void tabControl1_MouseClick(object sender, MouseEventArgs e) {
+
+            if (e.Button == MouseButtons.Right) {
+                for (int i = 0; i < tabControl1.TabCount; ++i)
+                {
+                    if (tabControl1.GetTabRect(i).Contains(e.Location))
+                    {
+                        TabPage tab = tabControl1.TabPages[i];
+
+                        if (tab!=firstTabPage && tab!=lastTabPage)
+                            tabControl1.TabPages.Remove(tab);
+                        //this.contextMenuStrip1.Show(this.tabControl1, e.Location);
+
+                    }
+                }
+            }
+
+        }
+
+
+
     }
 }
