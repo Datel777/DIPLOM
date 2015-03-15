@@ -12,14 +12,14 @@
     <panel_attributes>Этап договора
 bg=light_gray
 --
-Договор: belongs_to
-Номер этапа: int
+Договор_id: belongs_to
+Номер: int
 Начало работ: date
 Окончание работ: date
 Количество: int
-Цена этапа: money
+Цена: money
 Модель цены: int
-Заключение ВПМОРУ?: nvarchar(400)
+Заключение (ВПМОРУ): nvarchar(400)
 Аванс: money
 Расчёт: money
 Плановая трудоёмкость: float
@@ -43,7 +43,7 @@ bg=orange
 --
 Номер: int
 Дополнительное соглашение: nvarchar(100)
-Генеральный заказчик: belongs_to
+Генеральный заказчик_id: belongs_to
 Иностранные заказчики: has_many
 Исполнители: has_many
 Вид работ: nvarchar(100)
@@ -56,7 +56,7 @@ bg=orange
 Цена за единицу: money
 Модель цены: int
 Объём собственной работы: float
-Объём к/а: float
+Объём К/А: float
 Плановая трудоёмкость: float
 Фактическая трудоёмкость: float
 Страница: int
@@ -76,7 +76,7 @@ bg=orange
       <x>333</x>
       <y>531</y>
       <w>225</w>
-      <h>90</h>
+      <h>108</h>
     </coordinates>
     <panel_attributes>Юридическое лицо
 bg=orange
@@ -84,7 +84,8 @@ bg=orange
 Название: nvarchar(100)
 Иностранный: bit
 Договор: has_many
-Исполнители Договора: has_many</panel_attributes>
+Иностранные заказчики: has_many
+Исполнители договора: has_many</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -93,13 +94,13 @@ bg=orange
       <x>414</x>
       <y>333</y>
       <w>270</w>
-      <h>72</h>
+      <h>81</h>
     </coordinates>
     <panel_attributes>Исполнители договора
 bg=#3c7a00
 --
-Договор: belongs_to
-Юридическое лицо: belongs_to
+Договор_id: belongs_to
+Юридическое лицо_id: belongs_to
 Экономические показатели: has_many</panel_attributes>
     <additional_attributes/>
   </element>
@@ -114,13 +115,13 @@ bg=#3c7a00
     <panel_attributes>Экономический показатель
 bg=light_gray
 --
-Исполнители договора: belongs_to
+Исполнитель договора_id: belongs_to
 Год: int
-Средне месячный РОТ: money
+РОТ (Среднемесячный РОТ): money
 Социальное страхование(%): float
 Накладные расходы(%): float
 Рентабельность(%): float
-Лимит по трудоёмкости(ч/мес): float</panel_attributes>
+Лимит трудоёмкости(ч/мес): float</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -134,12 +135,12 @@ bg=light_gray
     <panel_attributes>Учёт материальных ценностей
 bg=light_gray
 --
-Этап договора: belongs_to
+Этап договора_id: belongs_to
 Наименование: nvarchar(100)
-Стоимость: money
+Цена: money
 Местонахождение: nvarchar(100)
 ? Документы(сохр, расп): nvarchar(100)
-Акт об изг. мат. ценностей: nvarchar(100)
+Акт изготовления: nvarchar(100)
 Накладная: nvarchar(100)</panel_attributes>
     <additional_attributes/>
   </element>
@@ -207,51 +208,51 @@ m1=*</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>531</x>
-      <y>396</y>
+      <y>405</y>
       <w>27</w>
-      <h>153</h>
+      <h>144</h>
     </coordinates>
     <panel_attributes>m2=*
 m1=1</panel_attributes>
-    <additional_attributes>10.0;150.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;140.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>630</x>
-      <y>396</y>
+      <y>405</y>
       <w>36</w>
-      <h>108</h>
+      <h>99</h>
     </coordinates>
     <panel_attributes>m2=1
 m1=+</panel_attributes>
-    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>243</x>
       <y>441</y>
-      <w>198</w>
-      <h>72</h>
+      <w>216</w>
+      <h>63</h>
     </coordinates>
-    <panel_attributes>Иностранные заказчики
+    <panel_attributes>Иностранный заказчик
 bg=#3c7a00
 --
-Договор: belongs_to
-Юридическое лицо: belongs_to</panel_attributes>
+Договор_id: belongs_to
+Юридическое лицо_id: belongs_to</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>432</x>
+      <x>450</x>
       <y>468</y>
-      <w>81</w>
+      <w>63</w>
       <h>81</h>
     </coordinates>
     <panel_attributes>m2=*
 m1=1</panel_attributes>
-    <additional_attributes>70.0;70.0;70.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>50.0;70.0;50.0;10.0;10.0;10.0</additional_attributes>
   </element>
 </diagram>
