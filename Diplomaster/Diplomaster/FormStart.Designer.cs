@@ -28,14 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Начинающиеся");
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Действующие");
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Закрывающиеся");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("2015", new System.Windows.Forms.TreeNode[] {
-            treeNode6,
-            treeNode7,
-            treeNode8});
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("2016");
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -98,21 +90,9 @@
             // 
             this.treeView1.Location = new System.Drawing.Point(125, 70);
             this.treeView1.Name = "treeView1";
-            treeNode6.Name = "Начинающиеся";
-            treeNode6.Text = "Начинающиеся";
-            treeNode7.Name = "Действующие";
-            treeNode7.Text = "Действующие";
-            treeNode8.Name = "Закрывающиеся";
-            treeNode8.Text = "Закрывающиеся";
-            treeNode9.Name = "2015";
-            treeNode9.Text = "2015";
-            treeNode10.Name = "2016";
-            treeNode10.Text = "2016";
-            this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode9,
-            treeNode10});
             this.treeView1.Size = new System.Drawing.Size(180, 343);
             this.treeView1.TabIndex = 5;
+            this.treeView1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeExpand);
             // 
             // tabControl1
             // 

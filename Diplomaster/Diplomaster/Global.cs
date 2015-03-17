@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Diplomaster
 {
@@ -17,6 +18,7 @@ namespace Diplomaster
         public static Color ColorTextNormal = SystemColors.WindowText;
         //public static Color ColorTextFile = Color.Red;
         public static DateTime MinDate = new DateTime(1753, 1, 1);
+        public static string LoadNodeName = "<<LOAD DATA>>";
         //public static string ConnectionString = @"Data Source = ..\..\Database.sdf";
         //public static string ConnectionString = @"Data Source = ..\..\..\connection.udl";
 

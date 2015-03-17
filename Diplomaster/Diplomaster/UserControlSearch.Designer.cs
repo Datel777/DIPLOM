@@ -28,35 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Начинающиеся");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Действующие");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Закрывающиеся");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("2015", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2,
-            treeNode3});
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("2016");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Пусто");
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
             // 
             // treeView1
             // 
+            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.treeView1.Location = new System.Drawing.Point(3, 3);
             this.treeView1.Name = "treeView1";
-            treeNode1.Name = "Начинающиеся";
-            treeNode1.Text = "Начинающиеся";
-            treeNode2.Name = "Действующие";
-            treeNode2.Text = "Действующие";
-            treeNode3.Name = "Закрывающиеся";
-            treeNode3.Text = "Закрывающиеся";
-            treeNode4.Name = "2015";
-            treeNode4.Text = "2015";
-            treeNode5.Name = "2016";
-            treeNode5.Text = "2016";
+            treeNode1.Name = "Пусто";
+            treeNode1.Text = "Пусто";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode4,
-            treeNode5});
-            this.treeView1.Size = new System.Drawing.Size(180, 343);
+            treeNode1});
+            this.treeView1.Size = new System.Drawing.Size(180, 372);
             this.treeView1.TabIndex = 6;
             // 
             // UserControlSearch
