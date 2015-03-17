@@ -73,6 +73,16 @@ namespace Diplomaster
             return res;
         }
 
+        static public bool Apply(Control label, Control Obj, bool bull)
+        {
+            if (bull)
+                label.ResetBackColor();
+            else
+                label.BackColor = Global.ColorError;
+
+            return bull;
+        }
+
         static public bool UInt(string str, bool cannull = false)
         {
             string strim = str.Trim();

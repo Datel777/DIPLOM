@@ -30,6 +30,7 @@
         {
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Пусто");
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // treeView1
@@ -42,24 +43,34 @@
             treeNode1.Text = "Пусто";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1});
-            this.treeView1.Size = new System.Drawing.Size(180, 372);
+            this.treeView1.Size = new System.Drawing.Size(180, 399);
             this.treeView1.TabIndex = 6;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(189, 34);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(219, 20);
+            this.textBox1.TabIndex = 7;
             // 
             // UserControlSearch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.treeView1);
             this.Name = "UserControlSearch";
-            this.Size = new System.Drawing.Size(451, 378);
+            this.Size = new System.Drawing.Size(594, 405);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TextBox textBox1;
 
     }
 }

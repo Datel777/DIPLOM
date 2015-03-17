@@ -625,6 +625,26 @@ namespace Diplomaster
             }
         }
 
+        private bool CheckUniqueNumber(int number)
+        {
+            int count = 0;
+
+            string query = "SELECT COUNT (*) FROM [Договор] WHERE [Номер] = @NUM";
+
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@NUM", number);
+
+                count = (Int32)cmd.ExecuteScalar();
+            }
+
+            return count==0;
+        }
+
+
         private void button1_Click(object sender, EventArgs e)
         {
             bool Check = true;
@@ -632,7 +652,11 @@ namespace Diplomaster
             int NUM;
 
             if (DocNumber == -1)
+            {
                 Check &= Validator.Apply(label1, textBox1, typeof(uint));
+                if (Check)
+                    Check &= Validator.Apply(label1, textBox1, CheckUniqueNumber(Convert.ToInt32(textBox1.Text)));
+            }
             Check &= Validator.Apply(label2, comboBox1);
             Check &= Validator.Apply(labelDate1, dateTimePicker1);
             Check &= Validator.Apply(labelDate2, dateTimePicker2, dateTimePicker1);

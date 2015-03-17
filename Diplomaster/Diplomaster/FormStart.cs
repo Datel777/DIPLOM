@@ -16,6 +16,7 @@ namespace Diplomaster
     {
         //TabPage firstTabPage = new TabPage("Все");
         TabPage lastTabPage = new TabPage("+");
+        int TabNumber = 1;
         //TreeNode needload = new TreeNode("Loading is soooo boring");
 
 
@@ -78,16 +79,16 @@ namespace Diplomaster
                 }
             }
 
-            
 
+            string y;
             for (int i = minyear; i <= maxyear; ++i)
             {
                 //MessageBox.Show("Min = " + minyear.ToString() + " Max = " + maxyear.ToString());
                 //MessageBox.Show(i.ToString());
                 //TreeNode node = new TreeNode("11");
-                
-                TreeNode node = new TreeNode(i.ToString());
-                node.Name = i.ToString();
+                y = i.ToString();
+                TreeNode node = new TreeNode(y);
+                node.Name = y;
                 node.Nodes.Add(Global.LoadNodeName);
                 treeView1.Nodes.Add(node);
             }
@@ -110,8 +111,8 @@ namespace Diplomaster
             
         }
 
-        public void CheckOpenForm(int index) {
-            int number = Convert.ToInt32(this.listBox1.Items[index]);
+        public void CheckOpenForm(int number) {
+            
             //MessageBox.Show(Convert.ToString(number));
             bool notfound = true;
 
@@ -140,7 +141,7 @@ namespace Diplomaster
             //myUserControl.Dock = DockStyle.Fill;
             //firstTabPage.Controls.Add(myUserControl);
             //tabC.Controls.Add(firstTabPage);
-            tabC.Controls.Add(CreateNewPage("Какой-то поиск"));
+            tabC.Controls.Add(CreateNewPage("Поиск 1"));
             tabC.Controls.Add(lastTabPage);
         }
 
@@ -172,7 +173,7 @@ namespace Diplomaster
         {
             int index = this.listBox1.IndexFromPoint(e.Location);
             if (index != -1)
-                CheckOpenForm(index);
+                CheckOpenForm(Convert.ToInt32(this.listBox1.Items[index]));
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -222,7 +223,10 @@ namespace Diplomaster
         {
             if (tabControl1.SelectedTab == lastTabPage)
             {
-                TabPage page = CreateNewPage("Поиск "+ tabControl1.SelectedIndex.ToString());
+                TabNumber++;
+                TabPage page = CreateNewPage("Поиск "+ TabNumber.ToString());
+
+                
 
                 tabControl1.TabPages.Insert(tabControl1.SelectedIndex, page);
                 tabControl1.SelectedTab = page;
@@ -293,9 +297,9 @@ namespace Diplomaster
             int continuesCount = GetContinuesYearCount(year);
             int endsCount = GetEndsYearCount(year);
 
-            TreeNode begins = new TreeNode("Начинающиеся(" + beginsCount.ToString() + ")");
-            TreeNode continues = new TreeNode("Действующие(" + continuesCount.ToString() + ")");
-            TreeNode ends = new TreeNode("Заканчивающиеся(" + endsCount.ToString() + ")");
+            TreeNode begins = new TreeNode("Начинающиеся (" + beginsCount.ToString() + ")");
+            TreeNode continues = new TreeNode("Действующие (" + continuesCount.ToString() + ")");
+            TreeNode ends = new TreeNode("Заканчивающиеся (" + endsCount.ToString() + ")");
 
             begins.Name = "begins";
             continues.Name = "continues";
@@ -314,6 +318,118 @@ namespace Diplomaster
             //node.Parent.Name;
         }
 
+        private void AddBeginsNodes(TreeNode parent, int year)
+        {
+            string query = "SELECT [Номер], [Начало работ] FROM [Договор] WHERE Year([Начало работ]) = @YEAR ORDER BY [Номер]"; // MONTH([Начало работ])
+
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@YEAR", year);
+
+                using (SqlDataReader rdr = cmd.ExecuteReader())
+                {
+                    try
+                    {
+                        while (rdr.Read())
+                        {
+
+                            int num = rdr.GetInt32(0);
+                            DateTime date = rdr.GetDateTime(1);
+
+                            TreeNode node = new TreeNode("[" + num.ToString() + "] с " + date.ToString("dd MMMM"));
+                            node.Name = num.ToString();
+
+                            parent.Nodes.Add(node);
+                        }
+                    }
+                    finally
+                    {
+                        rdr.Close();
+                        conn.Close();
+                    }
+                }
+            }
+        }
+
+        private void AddContinuesNodes(TreeNode parent, int year)
+        {
+            string query = "SELECT [Номер], [Начало работ], [Окончание работ] FROM [Договор] WHERE Year([Начало работ]) < @YEAR AND Year([Окончание работ]) > @YEAR ORDER BY [Номер]"; // MONTH([Начало работ])
+
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@YEAR", year);
+
+                using (SqlDataReader rdr = cmd.ExecuteReader())
+                {
+                    try
+                    {
+                        while (rdr.Read())
+                        {
+
+                            int num = rdr.GetInt32(0);
+                            DateTime date1 = rdr.GetDateTime(1);
+                            DateTime date2 = rdr.GetDateTime(2);
+
+                            //new DateTime(0, month, 0).ToString("MMMM");
+
+                            TreeNode node = new TreeNode("[" + num.ToString() + "] с " + date1.ToString("dd MMMM yyyy") + " до " + date2.ToString("dd MMMM yyyy"));
+                            node.Name = num.ToString();
+
+                            parent.Nodes.Add(node);
+                        }
+                    }
+                    finally
+                    {
+                        rdr.Close();
+                        conn.Close();
+                    }
+                }
+            }
+        }
+
+        private void AddEndsNodes(TreeNode parent, int year)
+        {
+            string query = "SELECT [Номер], [Окончание работ] FROM [Договор] WHERE Year([Окончание работ]) = @YEAR ORDER BY [Номер]"; // MONTH([Начало работ])
+
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@YEAR", year);
+
+                using (SqlDataReader rdr = cmd.ExecuteReader())
+                {
+                    try
+                    {
+                        while (rdr.Read())
+                        {
+                            int num = rdr.GetInt32(0);
+                            DateTime date = rdr.GetDateTime(1);
+
+                            TreeNode node = new TreeNode("[" + num.ToString() + "] до " + date.ToString("dd MMMM"));
+                            node.Name = num.ToString();
+
+                            parent.Nodes.Add(node);
+                        }
+                    }
+                    finally
+                    {
+                        rdr.Close();
+                        conn.Close();
+                    }
+                }
+            }
+        }
+
+
+
 
         private void treeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
@@ -321,38 +437,41 @@ namespace Diplomaster
             
             //MessageBox.Show(node.Text);
             //MessageBox.Show(node.Level.ToString());
-            if (node.Level==0)
-                if (node.Nodes.Count==1 && node.Nodes[0].Text==Global.LoadNodeName)
+            if (node.Level == 0)
+            {
+                if (node.Nodes.Count == 1 && node.Nodes[0].Text == Global.LoadNodeName)
                 {
                     int year = Convert.ToInt32(node.Text);
                     //MessageBox.Show(node.Text);
                     node.Nodes.Clear();
                     AddYearNodes(node, year);
                 }
+            }
+            else if (node.Level == 1)
+            {
+                if (node.Nodes.Count == 1 && node.Nodes[0].Text == Global.LoadNodeName)
+                {
+                    //int year = Convert.ToInt32(node.Text);
+                    ////MessageBox.Show(node.Text);
+                    //node.Nodes.Clear();
+                    //AddYearNodes(node, year);
+                    int year = Convert.ToInt32(node.Parent.Text);
 
+                    node.Nodes.Clear();
+                    if (node.Name == "begins")
+                        AddBeginsNodes(node, year);
+                    if (node.Name == "continues")
+                        AddContinuesNodes(node, year);
+                    if (node.Name == "ends")
+                        AddEndsNodes(node, year);
+                }
+            }
         }
 
-        //MessageBox.Show("----");
-        //if (e.Button == MouseButtons.Left)
-        //{
-        //    for (int i = 0; i < tabControl1.TabCount; ++i)
-        //    {
-        //        if (tabControl1.GetTabRect(i).Contains(e.Location))
-        //        {
-        //            TabPage tab = tabControl1.TabPages[i];
-
-        //            if (tab == lastTabPage)
-        //            {
-        //                TabPage page = CreateNewPage();
-
-        //                tabControl1.TabPages.Insert(tabControl1.SelectedIndex, page);
-        //                tabControl1.SelectedTab = page;
-        //            }
-        //        }
-        //    }
-        //}
-
-
-
+        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node.Level==2)
+                CheckOpenForm(Convert.ToInt32(e.Node.Name));
+        }
     }
 }

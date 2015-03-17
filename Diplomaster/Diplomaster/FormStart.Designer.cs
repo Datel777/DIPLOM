@@ -88,19 +88,25 @@
             // 
             // treeView1
             // 
+            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.treeView1.Location = new System.Drawing.Point(125, 70);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(180, 343);
+            this.treeView1.Size = new System.Drawing.Size(273, 342);
             this.treeView1.TabIndex = 5;
             this.treeView1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeExpand);
+            this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseDoubleClick);
             // 
             // tabControl1
             // 
-            this.tabControl1.Location = new System.Drawing.Point(442, 12);
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Location = new System.Drawing.Point(404, 12);
             this.tabControl1.Multiline = true;
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(372, 400);
+            this.tabControl1.Size = new System.Drawing.Size(410, 401);
             this.tabControl1.TabIndex = 6;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             this.tabControl1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tabControl1_MouseClick);
