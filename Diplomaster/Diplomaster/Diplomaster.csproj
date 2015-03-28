@@ -47,7 +47,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationIcon>Sasha.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
@@ -75,6 +80,12 @@
       <DependentUpon>DataBaseDataSet1.xsd</DependentUpon>
     </Compile>
     <Compile Include="Extensions.cs" />
+    <Compile Include="FormReportFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormReportFilter.Designer.cs">
+      <DependentUpon>FormReportFilter.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormStart.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,8 +99,39 @@
       <DependentUpon>FormDocument.cs</DependentUpon>
     </Compile>
     <Compile Include="Global.cs" />
+    <Compile Include="OwnTreeView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControlFileEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlFileEdit.Designer.cs">
+      <DependentUpon>UserControlFileEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlFileShow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlFileShow.Designer.cs">
+      <DependentUpon>UserControlFileShow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlFormEconomic.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlFormEconomic.Designer.cs">
+      <DependentUpon>UserControlFormEconomic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlFormStage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlFormStage.Designer.cs">
+      <DependentUpon>UserControlFormStage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlReport.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlReport.Designer.cs">
+      <DependentUpon>UserControlReport.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControlSearch.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -97,6 +139,9 @@
       <DependentUpon>UserControlSearch.cs</DependentUpon>
     </Compile>
     <Compile Include="Validator.cs" />
+    <EmbeddedResource Include="FormReportFilter.resx">
+      <DependentUpon>FormReportFilter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormStart.resx">
       <DependentUpon>FormStart.cs</DependentUpon>
     </EmbeddedResource>
@@ -111,11 +156,28 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UserControlFileEdit.resx">
+      <DependentUpon>UserControlFileEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlFileShow.resx">
+      <DependentUpon>UserControlFileShow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlFormEconomic.resx">
+      <DependentUpon>UserControlFormEconomic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlFormStage.resx">
+      <DependentUpon>UserControlFormStage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlReport.resx">
+      <DependentUpon>UserControlReport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControlSearch.resx">
       <DependentUpon>UserControlSearch.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
     <None Include="DatabaseDataSet.xsc">
       <DependentUpon>DatabaseDataSet.xsd</DependentUpon>
     </None>
@@ -162,6 +224,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>DataBase.mdf</DependentUpon>
     </Content>
+    <None Include="Resources\гифки-сделал-сам-роскосмос-протон-м-1250349.gif" />
+    <Content Include="Sasha.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

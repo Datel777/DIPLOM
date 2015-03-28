@@ -37,3 +37,9 @@ C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diploma
 C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\bin\Debug\DataBase.mdf
 C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\bin\Debug\DataBase_log.ldf
 C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.UserControlSearch.resources
+C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.UserControlFileEdit.resources
+C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.UserControlFileShow.resources
+C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.UserControlReport.resources
+C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.UserControlFormEconomic.resources
+C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.UserControlFormStage.resources
+C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.FormReportFilter.resources

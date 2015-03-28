@@ -64,6 +64,8 @@ namespace Diplomaster
                 res = Validator.Decimal(str, cannull);
             else if (type == typeof(File))
                 res = str == "" || File.Exists(str);
+            else if (type == typeof(string))
+                res = Validator.Filename(str, cannull);
 
             if (res)
                 label.ResetBackColor();
@@ -82,6 +84,7 @@ namespace Diplomaster
 
             return bull;
         }
+
 
         static public bool UInt(string str, bool cannull = false)
         {
@@ -115,6 +118,15 @@ namespace Diplomaster
                 return true;
             Regex regex = new Regex(@"^-?(([1-9]\d*)|0)(,\d{1,4})?$");
             return regex.Match(strim).Success;
+        }
+
+        static public bool Filename(string str, bool cannull = false)
+        {
+            //string strim = str.Trim();
+            if (cannull && str == "")
+                return true;
+            Regex regex = new Regex("^(.*(?!(\\|/|:|\\*|\\?|\\\"|<|>|\\|)).*)$");
+            return regex.Match(str).Success;
         }
 
         /*

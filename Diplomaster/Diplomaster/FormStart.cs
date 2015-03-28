@@ -10,6 +10,8 @@ using System.Windows.Forms;
 
 using System.Data.SqlClient;
 
+
+
 namespace Diplomaster
 {
     public partial class FormStart : Form
@@ -19,6 +21,11 @@ namespace Diplomaster
         int TabNumber = 1;
         //TreeNode needload = new TreeNode("Loading is soooo boring");
 
+        public void RefreshDocs()
+        {
+            RefreshListbox();
+            RefreshTree();
+        }
 
         public void RefreshListbox()
         {
@@ -89,6 +96,7 @@ namespace Diplomaster
                 y = i.ToString();
                 TreeNode node = new TreeNode(y);
                 node.Name = y;
+                //node.Checked = true;
                 node.Nodes.Add(Global.LoadNodeName);
                 treeView1.Nodes.Add(node);
             }
@@ -141,11 +149,11 @@ namespace Diplomaster
             //myUserControl.Dock = DockStyle.Fill;
             //firstTabPage.Controls.Add(myUserControl);
             //tabC.Controls.Add(firstTabPage);
-            tabC.Controls.Add(CreateNewPage("Поиск 1"));
+            tabC.Controls.Add(CreateNewReportPage("Отчёт 1"));
             tabC.Controls.Add(lastTabPage);
         }
 
-        public TabPage CreateNewPage(string title = null)
+        public TabPage CreateNewReportPage(string title = null)
         {
             TabPage page;
             if (String.IsNullOrEmpty(title)) 
@@ -153,20 +161,36 @@ namespace Diplomaster
             else 
                 page = new TabPage(title);
             
-            UserControl myUserControl = new UserControlSearch();
+            UserControl myUserControl = new UserControlReport();
             myUserControl.Dock = DockStyle.Fill;
             page.Controls.Add(myUserControl);
 
             return page;
         }
 
+        //public TabPage CreateNewSearchPage(string title = null)
+        //{
+        //    TabPage page;
+        //    if (String.IsNullOrEmpty(title))
+        //        page = new TabPage("----");
+        //    else
+        //        page = new TabPage(title);
+
+        //    UserControl myUserControl = new UserControlSearch();
+        //    myUserControl.Dock = DockStyle.Fill;
+        //    page.Controls.Add(myUserControl);
+
+        //    return page;
+        //}
+
+        
+
         public FormStart()
         {
             //MessageBox.Show("BEGIN INIT");
             InitializeComponent();
             InitializeTabControl(tabControl1);
-            RefreshListbox();
-            RefreshTree();
+            RefreshDocs();
         }
 
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -196,8 +220,7 @@ namespace Diplomaster
 
         private void button3_Click(object sender, EventArgs e)
         {
-            RefreshListbox();
-            RefreshTree();
+            RefreshDocs();
         }
 
 
@@ -224,7 +247,7 @@ namespace Diplomaster
             if (tabControl1.SelectedTab == lastTabPage)
             {
                 TabNumber++;
-                TabPage page = CreateNewPage("Поиск "+ TabNumber.ToString());
+                TabPage page = CreateNewReportPage("Отчёт "+ TabNumber.ToString());
 
                 
 
@@ -305,7 +328,7 @@ namespace Diplomaster
             continues.Name = "continues";
             ends.Name = "ends";
 
-            if (beginsCount>0)
+            if (beginsCount > 0)
                 begins.Nodes.Add(Global.LoadNodeName);
             if (continuesCount > 0)
                 continues.Nodes.Add(Global.LoadNodeName);
@@ -320,7 +343,7 @@ namespace Diplomaster
 
         private void AddBeginsNodes(TreeNode parent, int year)
         {
-            string query = "SELECT [Номер], [Начало работ] FROM [Договор] WHERE Year([Начало работ]) = @YEAR ORDER BY [Номер]"; // MONTH([Начало работ])
+            string query = "SELECT [Номер], [Начало работ] FROM [Договор] WHERE Year([Начало работ]) = @YEAR ORDER BY [Начало работ]"; // MONTH([Начало работ])
 
             using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
             {
@@ -356,7 +379,7 @@ namespace Diplomaster
 
         private void AddContinuesNodes(TreeNode parent, int year)
         {
-            string query = "SELECT [Номер], [Начало работ], [Окончание работ] FROM [Договор] WHERE Year([Начало работ]) < @YEAR AND Year([Окончание работ]) > @YEAR ORDER BY [Номер]"; // MONTH([Начало работ])
+            string query = "SELECT [Номер], [Начало работ], [Окончание работ] FROM [Договор] WHERE Year([Начало работ]) < @YEAR AND Year([Окончание работ]) > @YEAR ORDER BY [Начало работ]"; // MONTH([Начало работ])
 
             using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
             {
@@ -395,7 +418,7 @@ namespace Diplomaster
 
         private void AddEndsNodes(TreeNode parent, int year)
         {
-            string query = "SELECT [Номер], [Окончание работ] FROM [Договор] WHERE Year([Окончание работ]) = @YEAR ORDER BY [Номер]"; // MONTH([Начало работ])
+            string query = "SELECT [Номер], [Окончание работ] FROM [Договор] WHERE Year([Окончание работ]) = @YEAR ORDER BY [Окончание работ]"; // MONTH([Начало работ])
 
             using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
             {
@@ -437,6 +460,7 @@ namespace Diplomaster
             
             //MessageBox.Show(node.Text);
             //MessageBox.Show(node.Level.ToString());
+
             if (node.Level == 0)
             {
                 if (node.Nodes.Count == 1 && node.Nodes[0].Text == Global.LoadNodeName)
