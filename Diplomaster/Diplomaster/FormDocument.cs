@@ -370,23 +370,7 @@ namespace Diplomaster
             FillDateTimePicker(dateTimePicker2, DATA["Окончание работ"]);
         }
 
-        public int[] ReadToArray(SqlCommand cmd)
-        {
-            int i = 0;
-            int[] arr = { };
-            using (SqlDataReader rdr = cmd.ExecuteReader())
-            {
-                while (rdr.Read())
-                {
-                    Array.Resize(ref arr, arr.Length + 1);
-                    arr[i] = (Convert.ToInt32(rdr.GetInt32(0)));
-                    i++;
-                }
-
-                rdr.Close();
-            }
-            return arr;
-        }
+        
 
         public int[] GetListBoxSelected(ListBox listBox)
         {
@@ -444,6 +428,8 @@ namespace Diplomaster
         }
         */
 
+
+        /*
         public void ReadFrom(string where, string what, string arg1)
         {
             string query = "SELECT [" + what + "] FROM [" + where + "] WHERE [" + arg1 + "] = @NUM";
@@ -456,7 +442,7 @@ namespace Diplomaster
                     try
                     {
                         conn.Open();
-                        DATA[where] = ReadToArray(cmd);
+                        DATA[where] = ReadIdsToArray(cmd);
                     }
                     catch (Exception ex)
                     {
@@ -470,6 +456,22 @@ namespace Diplomaster
                 }
             }
         }
+
+        public int[] ReadIdsToArray(SqlCommand cmd)
+        {
+            List<int> result = new List<int>();
+
+            using (SqlDataReader rdr = cmd.ExecuteReader())
+            {
+                while (rdr.Read())
+                    result.Add(rdr.GetInt32(0));
+
+                rdr.Close();
+            }
+            return result.ToArray();
+        }
+        */
+
 
         public void FillFlowFiles()
         {
@@ -488,9 +490,10 @@ namespace Diplomaster
                             int i = 0;
                             while (rdr.Read())
                             {
-                                UserControlFileEdit uc = new UserControlFileEdit(this);
+                                UserControlFileEdit uc = new UserControlFileEdit(this, rdr.GetInt32(0));
                                 //uc.Name = "UserControlFileEdit" + i.ToString();
-                                uc.AddImageSet(rdr.GetInt32(0), rdr.GetString(1));
+                                //uc.AddImageSet(rdr.GetInt32(0), rdr.GetString(1));
+                                uc.SetFileName(rdr.GetString(1));
                                 flowLayoutPanel1.Controls.Add(uc);
                                 i++;
                             }
@@ -527,8 +530,8 @@ namespace Diplomaster
 
                 ReadDoc();
 
-                ReadFrom("Иностранный заказчик", "Юридическое лицо_id", "Договор_id");
-                ReadFrom("Исполнитель договора", "Юридическое лицо_id", "Договор_id");
+                DATA["Иностранный заказчик"] = SQL.ReadManyToMany("Иностранный заказчик", "Юридическое лицо_id", "Договор_id", DocNumber);
+                DATA["Исполнитель договора"] = SQL.ReadManyToMany("Исполнитель договора", "Юридическое лицо_id", "Договор_id", DocNumber);
 
                 FillAll();
 
@@ -574,95 +577,116 @@ namespace Diplomaster
         }
 
 
-        private void SaveManyMany(SqlConnection conn, int NUM, string where, ListBox list, string arg1, string arg2)
+        private void InsertManyToMany(SqlConnection conn, int NUM, string where, int[] ids, string arg1, string arg2)
         {
-            int[] Sel = { };
-            int[] Insert = { };
-            int[] Delete = { };
+            int length;
 
-            Sel = GetListBoxSelected(list);
-
-            if (DocNumber == -1)
-                Insert = Sel;
-            else {
-                Insert = Sel.Except((int[])DATA[where]).ToArray();
-                Delete = ((int[])DATA[where]).Except(Sel).ToArray();
-            }
-
-            
-            //MessageBox.Show("DATA[\"Инозаказчик\"] ---> " + ((int[])DATA["Инозаказчик"]).ToString2());
-            //MessageBox.Show("Insert ---> " + Insert.ToString2());
-            //MessageBox.Show("Delete ---> " + Delete.ToString2());
-
-            if (Insert.Length > 0)
+            if ((length = ids.Length) > 0)
             {
-                string query2 = "INSERT INTO [" + where + "] ([" + arg1 + "], [" + arg2 + "]) VALUES (@NUM, @VAL)";
+                string query = "INSERT INTO [" + where + "] ([" + arg1 + "], [" + arg2 + "])VALUES(@NUM0,@VAL0)";
+                int i;
+                string itos;
 
-                using (SqlCommand cmd = new SqlCommand(query2, conn))
+                if (length > 1)
                 {
-                    cmd.Parameters.AddWithValue("@NUM", NUM);
-
-                    foreach (int val in Insert)
+                    for (i = 1; i < length; i++)
                     {
-                        if (cmd.Parameters.Contains("@VAL"))
-                            cmd.Parameters["@VAL"].Value = val;
-                        else
-                            cmd.Parameters.AddWithValue("@VAL", val);
+                        itos = i.ToString();
+                        query += ",(@NUM" + itos + ",@VAL" + itos + ")";
+                    }
+                }
 
-                        try
-                        {
-                            conn.Open();
-                            cmd.ExecuteNonQuery();
-                        }
-                        catch (Exception ex)
-                        {
-                            conn.Close();
-                            MessageBox.Show(ex.ToString());
-                        }
-                        finally
-                        {
-                            conn.Close();
-                        }
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    for (i = 0; i < length; i++)
+                    {
+                        itos = i.ToString();
+                        cmd.Parameters.AddWithValue("@NUM" + itos, NUM);
+                        cmd.Parameters.AddWithValue("@VAL" + itos, ids[i]);
+                    }
+
+                    try
+                    {
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        conn.Close();
+                        MessageBox.Show(ex.ToString());
+                    }
+                    finally
+                    {
+                        conn.Close();
                     }
 
                 }
             }
-
-            if (Delete.Length > 0)
-            {
-                string query3 = "DELETE FROM [" + where + "] WHERE [" + arg1 + "] = @NUM AND [" + arg2 + "]= @VAL";
-
-                using (SqlCommand cmd = new SqlCommand(query3, conn))
-                {
-                    cmd.Parameters.AddWithValue("@NUM", DocNumber);
-
-                    foreach (int val in Delete)
-                    {
-                        if (cmd.Parameters.Contains("@VAL"))
-                            cmd.Parameters["@VAL"].Value = val;
-                        else
-                            cmd.Parameters.AddWithValue("@VAL", val);
-
-                        try
-                        {
-                            conn.Open();
-                            cmd.ExecuteNonQuery();
-                        }
-                        catch (Exception ex)
-                        {
-                            conn.Close();
-                            MessageBox.Show(ex.ToString());
-                        }
-                        finally
-                        {
-                            conn.Close();
-                        }
-                    }
-                }
-            }
-
         }
 
+        private void DeleteManyToMany(SqlConnection conn, int NUM, string where, int[] ids, string arg1, string arg2)
+        {
+            int length;
+
+            if ((length = ids.Length) > 0)
+            {
+                string query = "DELETE FROM [" + where + "] WHERE [" + arg1 + "] = @NUM AND [" + arg2 + "] IN (@VAL0";
+                int i;
+                string itos;
+
+                if (length > 1)
+                {
+                    for (i = 1; i < length; i++)
+                    {
+                        itos = i.ToString();
+                        query += ",@VAL" + itos;
+                    }
+                }
+
+                query += ")";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@NUM", NUM);
+                    for (i = 0; i < length; i++)
+                    {
+                        itos = i.ToString();
+                        cmd.Parameters.AddWithValue("@VAL" + itos, ids[i]);
+                    }
+
+                    try
+                    {
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        conn.Close();
+                        MessageBox.Show(ex.ToString());
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+
+                }
+            }
+        }
+
+        private void SaveManyMany(SqlConnection conn, int NUM, string where, int[] Sel, string arg1, string arg2)
+        {
+            if (DocNumber == -1)
+                InsertManyToMany(conn, NUM, where, Sel, arg1, arg2);
+            else
+            {
+                //Insert = Sel.Except((int[])DATA[where]).ToArray();
+                InsertManyToMany(conn, NUM, where, Sel.Except((int[])DATA[where]).ToArray(), arg1, arg2);
+                
+                //Delete = ((int[])DATA[where]).Except(Sel).ToArray();
+                DeleteManyToMany(conn, NUM, where, ((int[])DATA[where]).Except(Sel).ToArray(), arg1, arg2);
+
+            }
+        }
 
 
         //public byte[] LoadFile(string path) {
@@ -691,24 +715,24 @@ namespace Diplomaster
         //    }
         //}
 
-        private bool CheckUniqueNumber(int number)
-        {
-            int count = 0;
+        //private bool CheckUniqueNumber(int number)
+        //{
+        //    int count = 0;
 
-            string query = "SELECT COUNT (*) FROM [Договор] WHERE [Номер] = @NUM";
+        //    string query = "SELECT COUNT (*) FROM [Договор] WHERE [Номер] = @NUM";
 
-            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(query, conn);
+        //    using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+        //    {
+        //        conn.Open();
+        //        SqlCommand cmd = new SqlCommand(query, conn);
 
-                cmd.Parameters.AddWithValue("@NUM", number);
+        //        cmd.Parameters.AddWithValue("@NUM", number);
 
-                count = (Int32)cmd.ExecuteScalar();
-            }
+        //        count = (Int32)cmd.ExecuteScalar();
+        //    }
 
-            return count==0;
-        }
+        //    return count==0;
+        //}
 
 
         private void button1_Click(object sender, EventArgs e)
@@ -721,7 +745,7 @@ namespace Diplomaster
             {
                 Check &= Validator.Apply(label1, textBox1, typeof(uint));
                 if (Check)
-                    Check &= Validator.Apply(label1, textBox1, CheckUniqueNumber(Convert.ToInt32(textBox1.Text)));
+                    Check &= Validator.Apply(label1, textBox1, SQL.CheckUnique("Договор", "Номер", Convert.ToInt32(textBox1.Text)));
             }
             Check &= Validator.Apply(label2, comboBox1);
             Check &= Validator.Apply(labelDate1, dateTimePicker1);
@@ -905,9 +929,8 @@ namespace Diplomaster
                         }
                     }
 
-                    SaveManyMany(conn, NUM, "Иностранный заказчик", listBox1, "Договор_id", "Юридическое лицо_id");
-                    SaveManyMany(conn, NUM, "Исполнитель договора", listBox2, "Договор_id", "Юридическое лицо_id");
-
+                    SaveManyMany(conn, NUM, "Иностранный заказчик", GetListBoxSelected(listBox1), "Договор_id", "Юридическое лицо_id");
+                    SaveManyMany(conn, NUM, "Исполнитель договора", GetListBoxSelected(listBox2), "Договор_id", "Юридическое лицо_id");
                 }
                 this.Close();
             }
@@ -1093,7 +1116,6 @@ namespace Diplomaster
         //                info.Arguments = string.Format("/e, /select, \"{0}\"", saveFileDialog1.FileName);
         //                Process.Start(info);
         //            }
-
         //        }
         //        catch (Exception ex)
         //        {
@@ -1183,7 +1205,7 @@ namespace Diplomaster
             if (FlowSelected != null)
             {
                 int selectedIndex = flowLayoutPanel1.Controls.GetChildIndex(FlowSelected); ;
-                if (selectedIndex < flowLayoutPanel1.Controls.Count)
+                if (selectedIndex < flowLayoutPanel1.Controls.Count-1)
                 {
                     flowLayoutPanel1.Controls.SetChildIndex(flowLayoutPanel1.Controls[selectedIndex + 1], selectedIndex);
                 }
@@ -1216,16 +1238,13 @@ namespace Diplomaster
             }
         }
 
-
         private void AddFile(string path)
         {
-            UserControlFileEdit newControl = new UserControlFileEdit(this, true);
+            UserControlFileEdit newControl = new UserControlFileEdit(this, Path.GetFileName(path));
             newControl.Data = Extensions.LoadFile(path);
-            newControl.AddImageSet(-1, Path.GetFileName(path));
+            //newControl.AddImageSet(-1, Path.GetFileName(path));
             flowLayoutPanel1.Controls.Add(newControl);
         }
-
-        
 
     }
 }

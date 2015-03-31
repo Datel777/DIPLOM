@@ -25,43 +25,74 @@ namespace Diplomaster
         public byte[] Data = null;
         public bool Remove = false;
         public bool FileChanged = false;
-        public bool FileNew = false;
+        //public bool FileNew = false;
         FormDocument FormDocParent;
 
-        public UserControlFileEdit(FormDocument parent, bool itsnew = false)
+        public UserControlFileEdit(FormDocument parent, int id = -1)
         {
             InitializeComponent();
-            //MessageBox.Show(textBoxImg1N.Name);
-            FileNew = itsnew;
             FormDocParent = parent;
+            Id = id;
         }
 
-        public void AddImageSet(int id, string name)
+        public UserControlFileEdit(FormDocument parent, string name, int id = -1)
         {
+            InitializeComponent();
+            FormDocParent = parent;
             Id = id;
-            //Position = pos;
+            SetFileName(name);
+        }
 
-            int lastdot;
+        public string GetFileName()
+        {
+            return textBoxImg1N.Text + FileExtension; //FileName + ?
+        }
 
-            lastdot = name.LastIndexOf('.');
-
-            if (lastdot == -1)
-            {
-                FileName = name;
-                FileExtension = null;
-            }
-            else
-            {
-                FileName = name.Substring(0, lastdot);
-                FileExtension = name.Substring(lastdot);
-            }
+        public void SetFileName(string name)
+        {
+            //return FileName + FileExtension;
+            FileName = Path.GetFileNameWithoutExtension(name);
+            FileExtension = Path.GetExtension(name);
 
             textBoxImg1N.Text = FileName;
             label1.Text = FileExtension;
         }
 
+        //public void AddImageSet(int id, string name)
+        //{
+            
+        //    //Position = pos;
+
+        //    FileName = Path.GetFileNameWithoutExtension(name);
+        //    FileExtension = Path.GetExtension(name);
+
+        //    //int lastdot;
+
+        //    //lastdot = name.LastIndexOf('.');
+
+        //    //if (lastdot == -1)
+        //    //{
+        //    //    FileName = name;
+        //    //    FileExtension = null;
+        //    //}
+        //    //else
+        //    //{
+        //    //    FileName = name.Substring(0, lastdot);
+        //    //    FileExtension = name.Substring(lastdot);
+        //    //}
+
+        //    textBoxImg1N.Text = FileName;
+        //    label1.Text = FileExtension;
+        //}
+
         public void LoadFileData() 
         {
+            if (Id == -1)
+            {
+                MessageBox.Show("ID = -1");
+                return;
+            }
+
             string query = "SELECT [Файл] FROM [Файл договора] WHERE [Id]=@ID";
 
             using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
@@ -100,7 +131,7 @@ namespace Diplomaster
                 else
                     TempPath = Path.GetTempPath() + Guid.NewGuid().ToString() + FileExtension;
 
-                MessageBox.Show(TempPath);
+                //MessageBox.Show(TempPath);
                 Extensions.SaveFile(TempPath, Data);
             }
 
@@ -140,41 +171,45 @@ namespace Diplomaster
             if (Data.isnull())
                 LoadFileData();
 
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            if (Validator.Apply(labelImg, textBoxImg1N, typeof(string))) {
 
-            saveFileDialog1.InitialDirectory = Global.LastDirectoryPath;
-            saveFileDialog1.Filter = "All files (*.*)|*.*";
-            saveFileDialog1.RestoreDirectory = true;
+                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
-            if (FileExtension.isnull())
-                saveFileDialog1.FileName = FileName;
-            else
-                saveFileDialog1.FileName = FileName + FileExtension;
+                saveFileDialog1.InitialDirectory = Global.LastDirectoryPath;
+                saveFileDialog1.Filter = "All files (*.*)|*.*";
+                saveFileDialog1.RestoreDirectory = true;
+
+                saveFileDialog1.FileName = GetFileName();
+                //if (FileExtension == null)
+                //    saveFileDialog1.FileName = textBoxImg1N.Text;
+                //else
+                //    saveFileDialog1.FileName = textBoxImg1N.Text + FileExtension;
 
 
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                try
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    Extensions.SaveFile(saveFileDialog1.FileName, Data);
-                    Global.LastDirectoryPath = Path.GetDirectoryName(saveFileDialog1.FileName);
-
-                    var result = MessageBox.Show("Открыть папку с файлом?",
-                                         "Показать файл",
-                                         MessageBoxButtons.YesNo,
-                                         MessageBoxIcon.Question);
-
-                    if (result == DialogResult.Yes)
+                    try
                     {
-                        ProcessStartInfo info = new ProcessStartInfo();
-                        info.FileName = "explorer";
-                        info.Arguments = string.Format("/e, /select, \"{0}\"", saveFileDialog1.FileName);
-                        Process.Start(info);
+                        Extensions.SaveFile(saveFileDialog1.FileName, Data);
+                        Global.LastDirectoryPath = Path.GetDirectoryName(saveFileDialog1.FileName);
+
+                        var result = MessageBox.Show("Открыть папку с файлом?",
+                                             "Показать файл",
+                                             MessageBoxButtons.YesNo,
+                                             MessageBoxIcon.Question);
+
+                        if (result == DialogResult.Yes)
+                        {
+                            ProcessStartInfo info = new ProcessStartInfo();
+                            info.FileName = "explorer";
+                            info.Arguments = string.Format("/e, /select, \"{0}\"", saveFileDialog1.FileName);
+                            Process.Start(info);
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
                 }
             }
         }

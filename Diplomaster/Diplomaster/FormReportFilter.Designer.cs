@@ -36,7 +36,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(626, 370);
             this.Name = "FormReportFilter";
-            this.Text = "Фильтр";
+            this.Text = "ФИЛЬТР";
             this.ResumeLayout(false);
 
         }

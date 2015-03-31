@@ -8,10 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using System.Data.SqlClient;
-
-
-
 namespace Diplomaster
 {
     public partial class FormStart : Form
@@ -31,61 +27,22 @@ namespace Diplomaster
         {
             this.listBox1.Items.Clear();
 
-            string query = "SELECT [Номер] FROM [Договор] ORDER BY [Номер] ASC"; //, [Генеральный Заказчик]
-            
-            //SqlCommand cmd = new SqlCommand(query, conn);
-
-            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(query, conn);
-                using (SqlDataReader rdr = cmd.ExecuteReader())
-                {
-                    try
-                    {
-                        while (rdr.Read())
-                        {
-                            string s;
-                            s = Convert.ToString(rdr.GetInt32(0));
-                            listBox1.Items.Add(s);
-                        }
-                    }
-                    finally
-                    {
-                        rdr.Close();
-                        conn.Close();
-                    }
-                }
-            }
+            foreach (int element in SQL.GetOneOrder("Договор", "Номер", true))
+                listBox1.Items.Add(element.ToString());
         }
 
         public void RefreshTree()
         {
-            int minyear, maxyear;
             treeView1.Nodes.Clear();
 
-            string query = "SELECT MIN(Year([Начало работ])), MAX(Year([Окончание работ])) FROM [Договор]";
+            int minyear, maxyear;
+            SQL.SelectMinMaxYears(out minyear, out maxyear);
 
-            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(query, conn);
-                using (SqlDataReader rdr = cmd.ExecuteReader())
-                {
-                    try
-                    {
-                        rdr.Read();
-                        minyear = rdr.GetInt32(0);
-                        maxyear = rdr.GetInt32(1);
-                    }
-                    finally
-                    {
-                        rdr.Close();
-                        conn.Close();
-                    }
-                }
-            }
-
+            //{
+            //    Tuple<int, int> tuple = SQL.SelectMinMaxYears(minyear, maxyear);
+            //    minyear = tuple.Item1;
+            //    maxyear = tuple.Item2;
+            //}
 
             string y;
             for (int i = minyear; i <= maxyear; ++i)
@@ -116,7 +73,6 @@ namespace Diplomaster
             FormDocument Doc = new FormDocument(this, number);
             //MessageBox.Show(Convert.ToString(Doc.DocNumber));
             Doc.Show();
-            
         }
 
         public void CheckOpenForm(int number) {
@@ -149,19 +105,34 @@ namespace Diplomaster
             //myUserControl.Dock = DockStyle.Fill;
             //firstTabPage.Controls.Add(myUserControl);
             //tabC.Controls.Add(firstTabPage);
-            tabC.Controls.Add(CreateNewReportPage("Отчёт 1"));
+            tabC.Controls.Add(CreateNewReportPage());
             tabC.Controls.Add(lastTabPage);
         }
 
-        public TabPage CreateNewReportPage(string title = null)
+        public TabPage CreateNewReportPage(bool getnum = true)
         {
             TabPage page;
-            if (String.IsNullOrEmpty(title)) 
+            //if (number == -1) 
+            //    page = new TabPage("----");
+            //else
+            //    page = new TabPage("Отчёт " + number.ToString());
+
+
+            UserControl myUserControl;
+
+
+            if (getnum)
+            {
+                page = new TabPage("Отчёт " + TabNumber.ToString());
+                myUserControl = new UserControlReport(TabNumber);
+                TabNumber++;
+            }
+            else
+            {
                 page = new TabPage("----");
-            else 
-                page = new TabPage(title);
-            
-            UserControl myUserControl = new UserControlReport();
+                myUserControl = new UserControlReport(-1);
+            }
+
             myUserControl.Dock = DockStyle.Fill;
             page.Controls.Add(myUserControl);
 
@@ -191,6 +162,7 @@ namespace Diplomaster
             InitializeComponent();
             InitializeTabControl(tabControl1);
             RefreshDocs();
+            //MessageBox.Show(Controls["button3"].Text);
         }
 
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -223,7 +195,6 @@ namespace Diplomaster
             RefreshDocs();
         }
 
-
         private void tabControl1_MouseClick(object sender, MouseEventArgs e) {
             if (e.Button == MouseButtons.Right) {
                 for (int i = 0; i < tabControl1.TabCount; ++i)
@@ -234,9 +205,11 @@ namespace Diplomaster
 
                         //if (tab!=firstTabPage && tab!=lastTabPage)
                         if (tab != lastTabPage)
+                        {
+                            ((UserControlReport)tab.Controls[0]).CloseFormFilter();
                             tabControl1.TabPages.Remove(tab);
+                        }
                         //this.contextMenuStrip1.Show(this.tabControl1, e.Location);
-
                     }
                 }
             }
@@ -246,10 +219,7 @@ namespace Diplomaster
         {
             if (tabControl1.SelectedTab == lastTabPage)
             {
-                TabNumber++;
-                TabPage page = CreateNewReportPage("Отчёт "+ TabNumber.ToString());
-
-                
+                TabPage page = CreateNewReportPage();
 
                 tabControl1.TabPages.Insert(tabControl1.SelectedIndex, page);
                 tabControl1.SelectedTab = page;
@@ -257,68 +227,11 @@ namespace Diplomaster
             
         }
 
-        private int GetBeginsYearCount(int year)
-        {
-            int count = 0;
-
-            string query = "SELECT COUNT (*) FROM [Договор] WHERE Year([Начало работ]) = @YEAR";
-
-            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(query, conn);
-
-                cmd.Parameters.AddWithValue("@YEAR", year);
-
-                count = (Int32)cmd.ExecuteScalar();
-            }
-
-            return count;
-        }
-
-        private int GetContinuesYearCount(int year)
-        {
-            int count = 0;
-
-            string query = "SELECT COUNT (*) FROM [Договор] WHERE Year([Начало работ]) < @YEAR AND Year([Окончание работ]) > @YEAR";
-
-            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(query, conn);
-
-                cmd.Parameters.AddWithValue("@YEAR", year);
-
-                count = (Int32)cmd.ExecuteScalar();
-            }
-
-            return count;
-        }
-
-        private int GetEndsYearCount(int year)
-        {
-            int count = 0;
-
-            string query = "SELECT COUNT (*) FROM [Договор] WHERE Year([Окончание работ]) = @YEAR";
-
-            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(query, conn);
-
-                cmd.Parameters.AddWithValue("@YEAR", year);
-
-                count = (Int32)cmd.ExecuteScalar();
-            }
-
-            return count;
-        }
-
         private void AddYearNodes(TreeNode node, int year)
         {
-            int beginsCount = GetBeginsYearCount(year);
-            int continuesCount = GetContinuesYearCount(year);
-            int endsCount = GetEndsYearCount(year);
+            int beginsCount = SQL.GetBeginsYearCount(year);
+            int continuesCount = SQL.GetContinuesYearCount(year);
+            int endsCount = SQL.GetEndsYearCount(year);
 
             TreeNode begins = new TreeNode("Начинающиеся (" + beginsCount.ToString() + ")");
             TreeNode continues = new TreeNode("Действующие (" + continuesCount.ToString() + ")");
@@ -343,116 +256,39 @@ namespace Diplomaster
 
         private void AddBeginsNodes(TreeNode parent, int year)
         {
-            string query = "SELECT [Номер], [Начало работ] FROM [Договор] WHERE Year([Начало работ]) = @YEAR ORDER BY [Начало работ]"; // MONTH([Начало работ])
-
-            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            foreach (Tuple<int, DateTime> tuple in SQL.GetBeginsNodes(year))
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(query, conn);
+                string num = tuple.Item1.ToString();
+                TreeNode node = new TreeNode("[" + num + "] с " + tuple.Item2.ToString("dd MMMM"));
+                node.Name = num;
 
-                cmd.Parameters.AddWithValue("@YEAR", year);
-
-                using (SqlDataReader rdr = cmd.ExecuteReader())
-                {
-                    try
-                    {
-                        while (rdr.Read())
-                        {
-
-                            int num = rdr.GetInt32(0);
-                            DateTime date = rdr.GetDateTime(1);
-
-                            TreeNode node = new TreeNode("[" + num.ToString() + "] с " + date.ToString("dd MMMM"));
-                            node.Name = num.ToString();
-
-                            parent.Nodes.Add(node);
-                        }
-                    }
-                    finally
-                    {
-                        rdr.Close();
-                        conn.Close();
-                    }
-                }
+                parent.Nodes.Add(node);
             }
         }
 
         private void AddContinuesNodes(TreeNode parent, int year)
         {
-            string query = "SELECT [Номер], [Начало работ], [Окончание работ] FROM [Договор] WHERE Year([Начало работ]) < @YEAR AND Year([Окончание работ]) > @YEAR ORDER BY [Начало работ]"; // MONTH([Начало работ])
-
-            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            foreach (Tuple<int, DateTime, DateTime> tuple in SQL.GetContinuesNodes(year))
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(query, conn);
+                string num = tuple.Item1.ToString();
+                TreeNode node = new TreeNode("[" + num + "] с " + tuple.Item2.ToString("dd MMMM yyyy") + " до " + tuple.Item3.ToString("dd MMMM yyyy"));
+                node.Name = num;
 
-                cmd.Parameters.AddWithValue("@YEAR", year);
-
-                using (SqlDataReader rdr = cmd.ExecuteReader())
-                {
-                    try
-                    {
-                        while (rdr.Read())
-                        {
-
-                            int num = rdr.GetInt32(0);
-                            DateTime date1 = rdr.GetDateTime(1);
-                            DateTime date2 = rdr.GetDateTime(2);
-
-                            //new DateTime(0, month, 0).ToString("MMMM");
-
-                            TreeNode node = new TreeNode("[" + num.ToString() + "] с " + date1.ToString("dd MMMM yyyy") + " до " + date2.ToString("dd MMMM yyyy"));
-                            node.Name = num.ToString();
-
-                            parent.Nodes.Add(node);
-                        }
-                    }
-                    finally
-                    {
-                        rdr.Close();
-                        conn.Close();
-                    }
-                }
+                parent.Nodes.Add(node);
             }
         }
 
         private void AddEndsNodes(TreeNode parent, int year)
         {
-            string query = "SELECT [Номер], [Окончание работ] FROM [Договор] WHERE Year([Окончание работ]) = @YEAR ORDER BY [Окончание работ]"; // MONTH([Начало работ])
-
-            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            foreach (Tuple<int, DateTime> tuple in SQL.GetEndsNodes(year))
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(query, conn);
+                string num = tuple.Item1.ToString();
+                TreeNode node = new TreeNode("[" + num + "] с " + tuple.Item2.ToString("dd MMMM"));
+                node.Name = num;
 
-                cmd.Parameters.AddWithValue("@YEAR", year);
-
-                using (SqlDataReader rdr = cmd.ExecuteReader())
-                {
-                    try
-                    {
-                        while (rdr.Read())
-                        {
-                            int num = rdr.GetInt32(0);
-                            DateTime date = rdr.GetDateTime(1);
-
-                            TreeNode node = new TreeNode("[" + num.ToString() + "] до " + date.ToString("dd MMMM"));
-                            node.Name = num.ToString();
-
-                            parent.Nodes.Add(node);
-                        }
-                    }
-                    finally
-                    {
-                        rdr.Close();
-                        conn.Close();
-                    }
-                }
+                parent.Nodes.Add(node);
             }
         }
-
-
-
 
         private void treeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {

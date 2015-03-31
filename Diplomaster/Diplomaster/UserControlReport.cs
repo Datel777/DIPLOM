@@ -9,11 +9,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using System.Data.SqlClient;
+using System.Collections;
 
 namespace Diplomaster
 {
     public partial class UserControlReport : UserControl
     {
+        int TabNumber;
+        public FormReportFilter FormFilter;
+        public Hashtable FilterData = new Hashtable();// Or HashSet?
         private void InitTree() {
             OwnTreeView.Initialize(treeView1);
             foreach (string name in Global.DocSchema) {
@@ -46,9 +50,11 @@ namespace Diplomaster
             
         }
 
-        public UserControlReport()
+        public UserControlReport(int tabnum)
         {
             InitializeComponent();
+            TabNumber = tabnum;
+
             InitTree();
         }
 
@@ -131,9 +137,24 @@ namespace Diplomaster
 
         private void buttonFilter_Click(object sender, EventArgs e)
         {
-            FormReportFilter Filter = new FormReportFilter();
-            Filter.ShowDialog();
+            if (FormFilter == null || FormFilter.IsDisposed)
+            {
+                FormFilter = new FormReportFilter(FilterData);
+                if (TabNumber == -1)
+                    FormFilter.Text = "Фильтр ----";
+                else
+                    FormFilter.Text = "Фильтр отчёта " + TabNumber.ToString();
 
+                FormFilter.Show();
+            }
+            else
+                FormFilter.Activate();
+        }
+
+        public void CloseFormFilter()
+        {
+            if (!(FormFilter == null || FormFilter.IsDisposed))
+                FormFilter.Close();
         }
     }
 }

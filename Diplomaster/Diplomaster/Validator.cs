@@ -125,8 +125,8 @@ namespace Diplomaster
             //string strim = str.Trim();
             if (cannull && str == "")
                 return true;
-            Regex regex = new Regex("^(.*(?!(\\|/|:|\\*|\\?|\\\"|<|>|\\|)).*)$");
-            return regex.Match(str).Success;
+            Regex regex = new Regex("^(.*(\\\\|/|:|\\*|\\?|\\\"|<|>|\\|).*)$");
+            return !regex.Match(str).Success;
         }
 
         /*
