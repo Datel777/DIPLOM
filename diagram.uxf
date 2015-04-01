@@ -4,13 +4,15 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>504</x>
-      <y>9</y>
+      <x>612</x>
+      <y>0</y>
       <w>279</w>
-      <h>270</h>
+      <h>279</h>
     </coordinates>
     <panel_attributes>Этап договора
 bg=light_gray
+--
+Id: int
 --
 Договор_id: belongs_to
 Номер: int
@@ -33,15 +35,16 @@ bg=light_gray
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>108</x>
-      <y>9</y>
+      <x>126</x>
+      <y>0</y>
       <w>288</w>
-      <h>405</h>
+      <h>351</h>
     </coordinates>
     <panel_attributes>Договор
 bg=orange
 --
 Номер: int
+--
 Дополнительное соглашение: nvarchar(100)
 Генеральный заказчик_id: belongs_to
 Иностранные заказчики: has_many
@@ -62,10 +65,6 @@ bg=orange
 Страница: int
 Ведущий (фамилия): nvarchar(100)
 Примечание: nvarchar(400)
-Изображение1: image
-Имя изображения1: nvarchar(100)
-Изображение2: image
-Имя изображения2: nvarchar(100)
 Редактируется: bit
 </panel_attributes>
     <additional_attributes/>
@@ -73,13 +72,15 @@ bg=orange
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>333</x>
-      <y>531</y>
+      <x>351</x>
+      <y>522</y>
       <w>225</w>
-      <h>108</h>
+      <h>126</h>
     </coordinates>
     <panel_attributes>Юридическое лицо
 bg=orange
+--
+Id: int
 --
 Название: nvarchar(100)
 Иностранный: bit
@@ -91,13 +92,15 @@ bg=orange
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>414</x>
-      <y>333</y>
-      <w>270</w>
-      <h>81</h>
+      <x>432</x>
+      <y>306</y>
+      <w>252</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>Исполнители договора
 bg=#3c7a00
+--
+Id: int
 --
 Договор_id: belongs_to
 Юридическое лицо_id: belongs_to
@@ -107,13 +110,15 @@ bg=#3c7a00
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>567</x>
-      <y>486</y>
-      <w>252</w>
-      <h>135</h>
+      <x>585</x>
+      <y>495</y>
+      <w>234</w>
+      <h>153</h>
     </coordinates>
     <panel_attributes>Экономический показатель
 bg=light_gray
+--
+Id: int
 --
 Исполнитель договора_id: belongs_to
 Год: int
@@ -127,13 +132,15 @@ bg=light_gray
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>693</x>
-      <y>297</y>
-      <w>252</w>
-      <h>135</h>
+      <x>711</x>
+      <y>288</y>
+      <w>243</w>
+      <h>153</h>
     </coordinates>
     <panel_attributes>Учёт материальных ценностей
 bg=light_gray
+--
+Id: int
 --
 Этап договора_id: belongs_to
 Наименование: nvarchar(100)
@@ -147,97 +154,99 @@ bg=light_gray
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>387</x>
-      <y>45</y>
-      <w>135</w>
+      <x>405</x>
+      <y>36</y>
+      <w>225</w>
       <h>36</h>
     </coordinates>
     <panel_attributes>m2=1
 m1=+</panel_attributes>
-    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>230.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>774</x>
-      <y>45</y>
-      <w>63</w>
+      <x>882</x>
+      <y>36</y>
+      <w>54</w>
       <h>270</h>
     </coordinates>
     <panel_attributes>m2=1
 m1=+</panel_attributes>
-    <additional_attributes>40.0;280.0;40.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>30.0;280.0;30.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>171</x>
-      <y>405</y>
+      <x>189</x>
+      <y>342</y>
       <w>180</w>
-      <h>198</h>
+      <h>216</h>
     </coordinates>
     <panel_attributes>m2=*
 m1=1</panel_attributes>
-    <additional_attributes>180.0;190.0;10.0;190.0;10.0;10.0</additional_attributes>
+    <additional_attributes>180.0;210.0;10.0;210.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>198</x>
-      <y>405</y>
+      <x>216</x>
+      <y>342</y>
       <w>63</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>m2=*
+m1=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0;50.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>405</x>
+      <y>234</y>
+      <w>144</w>
       <h>90</h>
     </coordinates>
     <panel_attributes>m2=*
 m1=1</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;80.0;50.0;80.0</additional_attributes>
+    <additional_attributes>10.0;10.0;140.0;10.0;140.0;80.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>387</x>
-      <y>225</y>
-      <w>99</w>
-      <h>126</h>
-    </coordinates>
-    <panel_attributes>m2=1
-m1=*</panel_attributes>
-    <additional_attributes>90.0;120.0;90.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>531</x>
-      <y>405</y>
+      <x>549</x>
+      <y>387</y>
       <w>27</w>
-      <h>144</h>
+      <h>153</h>
     </coordinates>
     <panel_attributes>m2=*
 m1=1</panel_attributes>
-    <additional_attributes>10.0;140.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;150.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>630</x>
-      <y>405</y>
+      <x>648</x>
+      <y>387</y>
       <w>36</w>
-      <h>99</h>
+      <h>126</h>
     </coordinates>
     <panel_attributes>m2=1
 m1=+</panel_attributes>
-    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>243</x>
-      <y>441</y>
+      <x>261</x>
+      <y>414</y>
       <w>216</w>
-      <h>63</h>
+      <h>81</h>
     </coordinates>
     <panel_attributes>Иностранный заказчик
 bg=#3c7a00
+--
+Id: int
 --
 Договор_id: belongs_to
 Юридическое лицо_id: belongs_to</panel_attributes>
@@ -246,13 +255,44 @@ bg=#3c7a00
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>450</x>
-      <y>468</y>
+      <x>468</x>
+      <y>441</y>
       <w>63</w>
-      <h>81</h>
+      <h>99</h>
     </coordinates>
     <panel_attributes>m2=*
 m1=1</panel_attributes>
-    <additional_attributes>50.0;70.0;50.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>50.0;90.0;50.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>441</x>
+      <y>72</y>
+      <w>153</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>Файл договора
+bg=light_gray
+--
+Id: int
+--
+Договор_id: belongs_to
+Файл: image
+Название: nvarchar(50)
+Порядок: int</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>405</x>
+      <y>171</y>
+      <w>135</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>m2=*
+m1=1</panel_attributes>
+    <additional_attributes>10.0;40.0;130.0;40.0;130.0;10.0</additional_attributes>
   </element>
 </diagram>

@@ -6,11 +6,46 @@ using System.Threading.Tasks;
 
 using System.Data.SqlClient;
 using System.Windows.Forms;
+using System.Collections;
+
 
 namespace Diplomaster
 {
     static class SQL
     {
+        //SELECTS
+        public static string[] LoadSchema(string where)
+        {
+            List<string> list = new List<string>();
+            string query = "SELECT TOP 0 * FROM [" + where + "]";
+
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            {
+                conn.Open();
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                using (SqlDataReader rdr = cmd.ExecuteReader())
+                {
+                    try
+                    {
+                        rdr.Read();
+                        for (int i = 0; i < rdr.FieldCount; i++)
+                            list.Add(rdr.GetName(i));
+                    }
+                    finally
+                    {
+                        rdr.Close();
+                        conn.Close();
+                    }
+                }
+
+                conn.Close();
+            }
+
+            return list.ToArray();
+            //MessageBox.Show(Global.DocSchema.ToString2());
+        }
+
         public static List<object> GetOneOrder(string where, string what, bool asc = true)
         {
             List<object> result = new List<object>();
@@ -35,6 +70,72 @@ namespace Diplomaster
                     finally
                     {
                         rdr.Close();
+                        conn.Close();
+                    }
+                }
+            }
+            return result;
+        }
+
+        public static List<Tuple<object, object>> GetTwoOrder(string where, string what1, string what2, string order, bool asc = true)
+        {
+            List<Tuple<object, object>> result = new List<Tuple<object, object>>();
+
+            string query = "SELECT [" + what1 + "],[" + what2 + "] FROM [" + where + "] ORDER BY [" + order + "] ";
+
+            query += asc ? "ASC" : "DESC";
+
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(query, conn);
+                using (SqlDataReader rdr = cmd.ExecuteReader())
+                {
+                    try
+                    {
+                        while (rdr.Read())
+                        {
+                            Tuple<object, object> turple = new Tuple<object, object>(rdr.GetValue(0), rdr.GetValue(1));
+                            result.Add(turple);
+                        }
+                    }
+                    finally
+                    {
+                        rdr.Close();
+                        conn.Close();
+                    }
+                }
+            }
+            return result;
+        }
+
+        public static object GetOneFirst(string where, string what, string arg1 = null, object val1 = null)
+        {
+            object result = null;
+
+            string query = "SELECT ["+what+"] FROM ["+where+"]";
+
+            if (arg1 != null)
+                query += " WHERE [" + arg1 + "] = @ARG1";
+
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    if (arg1 != null)
+                        cmd.Parameters.AddWithValue("@ARG1", val1);
+
+                    try
+                    {
+                        conn.Open();
+                        result = cmd.ExecuteScalar();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
+                    finally
+                    {
                         conn.Close();
                     }
                 }
@@ -280,5 +381,265 @@ namespace Diplomaster
                 return (Int32)cmd.ExecuteScalar() == 0;
             }
         }
+
+        public static void ReadToCombo(ComboBox combo, string where, string what, string arg1 = null, object val1 = null)
+        {
+            string query = "SELECT [Id], [" + what + "] FROM [" + where + "]";
+
+            if (arg1 != null)
+                query += " WHERE [" + arg1 + "] = @ARG1";
+
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                if (arg1 != null)
+                    cmd.Parameters.AddWithValue("@ARG1", val1);
+
+                using (SqlDataReader rdr = cmd.ExecuteReader())
+                {
+                    try
+                    {
+                        while (rdr.Read())
+                        {
+                            BoxItem item = new BoxItem();
+
+                            item.Text = rdr.GetString(1);
+                            item.Value = rdr.GetInt32(0);
+
+                            combo.Items.Add(item);
+                        }
+                    }
+                    finally
+                    {
+                        rdr.Close();
+                        conn.Close();
+                    }
+                }
+            }
+        }
+
+        public static void ReadToList(ListBox list, string where, string what, string arg1 = null, object val1 = null)
+        {
+            string query = "SELECT [id], [" + what + "] FROM [" + where + "]";
+
+            if (arg1 != null)
+                query += " WHERE [" + arg1 + "] = @ARG1";
+
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                if (arg1 != null)
+                    cmd.Parameters.AddWithValue("@ARG1", val1);
+
+                using (SqlDataReader rdr = cmd.ExecuteReader())
+                {
+                    try
+                    {
+                        while (rdr.Read())
+                        {
+                            BoxItem item = new BoxItem();
+
+                            item.Text = rdr.GetString(1);
+                            item.Value = rdr.GetInt32(0);
+
+                            list.Items.Add(item);
+                        }
+                    }
+                    finally
+                    {
+                        rdr.Close();
+                        conn.Close();
+                    }
+                }
+            }
+        }
+        
+        //INSERTS
+        public static void InsertManyToMany(int NUM, string where, int[] ids, string arg1, string arg2)
+        {
+            int length;
+
+            if ((length = ids.Length) > 0)
+            {
+                string query = "INSERT INTO [" + where + "] ([" + arg1 + "], [" + arg2 + "])VALUES(@NUM,@VAL0)";
+                int i;
+
+                if (length > 1)
+                {
+                    for (i = 1; i < length; i++)
+                        query += ",(@NUM,@VAL" + i.ToString() + ")";
+                }
+
+
+                using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@NUM", NUM);
+                    for (i = 0; i < length; i++)
+                        cmd.Parameters.AddWithValue("@VAL" + i.ToString(), ids[i]);
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        conn.Close();
+                        MessageBox.Show(ex.ToString());
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                }
+            }
+        }
+
+        //public static void InsertManyToMany(int NUM, string where, Hashtable Hash, string arg1)
+        //{
+        //    //int length;
+
+        //    //string query = "INSERT INTO [" + where + "] ([" + arg1 + "], [" + arg2 + "])VALUES(@NUM,@VAL0)";
+        //    string query = "INSERT INTO [" + where + "] (";
+
+        //    //MessageBox.Show(Hash["Id"].ToString());
+        //    bool first = true;
+        //    int size = 0;
+
+        //    foreach (DictionaryEntry entry in Hash)
+        //    {
+        //        if (first)
+        //        {
+        //            query += "[" + entry.Key.ToString() + "]";
+        //            //MessageBox.Show(entry.Value.GetType().ToString());
+        //            size = ((int[])entry.Value).Length;
+        //        }
+        //        else
+        //            query += ",[" + entry.Key.ToString() + "]";
+        //    }
+
+        //    query += ")";
+
+        //    //"VALUES(@NUM,"
+
+        //    {
+
+        //    }
+
+        //    for (int i = 1; i < size; i++)
+        //    {
+        //        string itos = i.ToString();
+        //        string arg = "@ARG_" + itos;
+        //        /*
+        //        foreach (DictionaryEntry entry in Hash)
+        //        {
+        //            if (first)
+        //                query += "[" + entry.Value.ToString() + "]";
+        //            else
+        //                query += ",[" + entry.Value.ToString() + "]";
+        //        }*/
+        //    }
+
+
+
+
+        //    MessageBox.Show(query);
+        //    //foreach (string name in Hash)
+        //    //{
+
+        //    //}
+
+
+        //    /*
+        //    if ((length = ids.Length) > 0)
+        //    {
+        //        string query = "INSERT INTO [" + where + "] ([" + arg1 + "], [" + arg2 + "])VALUES(@NUM,@VAL0)";
+        //        int i;
+
+        //        if (length > 1)
+        //        {
+        //            for (i = 1; i < length; i++)
+        //                query += ",(@NUM,@VAL" + i.ToString() + ")";
+        //        }
+
+
+        //        using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+        //        {
+        //            conn.Open();
+        //            SqlCommand cmd = new SqlCommand(query, conn);
+        //            cmd.Parameters.AddWithValue("@NUM", NUM);
+        //            for (i = 0; i < length; i++)
+        //                cmd.Parameters.AddWithValue("@VAL" + i.ToString(), ids[i]);
+
+        //            try
+        //            {
+        //                cmd.ExecuteNonQuery();
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                conn.Close();
+        //                MessageBox.Show(ex.ToString());
+        //            }
+        //            finally
+        //            {
+        //                conn.Close();
+        //            }
+        //        }
+        //    }
+        //    */
+        //}
+
+
+        //UPDATES
+
+
+        //DELETES
+        public static void DeleteManyToMany(int NUM, string where, int[] ids, string arg1, string arg2)
+        {
+            int length;
+
+            if ((length = ids.Length) > 0)
+            {
+                string query = "DELETE FROM [" + where + "] WHERE [" + arg1 + "] = @NUM AND [" + arg2 + "] IN (@VAL0";
+                int i;
+
+                if (length > 1)
+                {
+                    for (i = 1; i < length; i++)
+                        query += ",@VAL" + i.ToString();
+                }
+
+                query += ")";
+
+                using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@NUM", NUM);
+                    for (i = 0; i < length; i++)
+                        cmd.Parameters.AddWithValue("@VAL" + i.ToString(), ids[i]);
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        conn.Close();
+                        MessageBox.Show(ex.ToString());
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                }
+            }
+        }
+
     }
 }

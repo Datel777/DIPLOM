@@ -25,82 +25,7 @@ namespace Diplomaster
         //public bool RemoveImage2 = false;
         //public int FlowSelected = -1;
         public UserControlFileEdit FlowSelected;
-        
-        public void ReadCombo(ComboBox combo, string where, string what, string arg1 = null, object val1 = null)
-        {
-            string query = "SELECT [id], [" + what + "] FROM [" + where + "]";
 
-            if (arg1 != null)
-                query += " WHERE [" + arg1 + "] = @ARG1";
-
-            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(query, conn);
-
-                if (arg1 != null)
-                    cmd.Parameters.AddWithValue("@ARG1", val1);
-
-                using (SqlDataReader rdr = cmd.ExecuteReader())
-                {
-                    try
-                    {
-                        while (rdr.Read())
-                        {
-                            BoxItem item = new BoxItem();
-
-                            item.Text = rdr.GetString(1);
-                            item.Value = rdr.GetInt32(0);
-
-                            combo.Items.Add(item);
-                        }
-                    }
-                    finally
-                    {
-                        rdr.Close();
-                        conn.Close();
-                    }
-                }
-            }
-        }
-
-        public void ReadList(ListBox list, string where, string what, string arg1 = null, object val1 = null)
-        {
-            string query = "SELECT [id], [" + what + "] FROM [" + where + "]";
-
-            if (arg1 != null)
-                query += " WHERE [" + arg1 + "] = @ARG1";
-
-            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(query, conn);
-
-                if (arg1 != null)
-                    cmd.Parameters.AddWithValue("@ARG1", val1);
-
-                using (SqlDataReader rdr = cmd.ExecuteReader())
-                {
-                    try
-                    {
-                        while (rdr.Read())
-                        {
-                            BoxItem item = new BoxItem();
-
-                            item.Text = rdr.GetString(1);
-                            item.Value = rdr.GetInt32(0);
-
-                            list.Items.Add(item);
-                        }
-                    }
-                    finally
-                    {
-                        rdr.Close();
-                        conn.Close();
-                    }
-                }
-            }
-        }
 
         /*
         public void LoadList(int number)
@@ -370,25 +295,6 @@ namespace Diplomaster
             FillDateTimePicker(dateTimePicker2, DATA["Окончание работ"]);
         }
 
-        
-
-        public int[] GetListBoxSelected(ListBox listBox)
-        {
-            int[] Set = { };
-            int i = 0, c = 0;
-            foreach (BoxItem element in listBox.Items)
-            {
-                if (listBox.GetSelected(i))
-                {
-                    Array.Resize(ref Set, Set.Length + 1);
-                    Set[c] = (Convert.ToInt32(element.Value));
-                    c++;
-                }
-                i++;
-            }
-            return Set;
-        }
-
         /*
         public string GetListBoxSet(ListBox listBox)
         {
@@ -473,44 +379,25 @@ namespace Diplomaster
         */
 
 
-        public void FillFlowFiles()
+        public void ReadFlowFiles()
         {
-            string query = "SELECT [Id],[Название] FROM [Файл договора] WHERE [Договор_id]=@NUM ORDER BY [Порядок] ASC";
+            List<int> ids = new List<int>();
+            int id;
 
-            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            foreach (Tuple<object, object> turple in SQL.GetTwoOrder("Файл договора", "Id", "Название", "Порядок"))
             {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@NUM", DocNumber);
-                    try
-                    {
-                        conn.Open();
-                        using (SqlDataReader rdr = cmd.ExecuteReader())
-                        {
-                            int i = 0;
-                            while (rdr.Read())
-                            {
-                                UserControlFileEdit uc = new UserControlFileEdit(this, rdr.GetInt32(0));
-                                //uc.Name = "UserControlFileEdit" + i.ToString();
-                                //uc.AddImageSet(rdr.GetInt32(0), rdr.GetString(1));
-                                uc.SetFileName(rdr.GetString(1));
-                                flowLayoutPanel1.Controls.Add(uc);
-                                i++;
-                            }
-                            rdr.Close();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.ToString());
-                    }
-                    finally
-                    {
-                        conn.Close();
-                    }
-                }
+                id = (int)turple.Item1;
+                UserControlFileEdit uc = new UserControlFileEdit(this, (string)turple.Item2, id);
+                ids.Add(id);
+                flowLayoutPanel1.Controls.Add(uc);
             }
 
+            DATA["Файл договора"] = ids.ToArray();
+        }
+
+        public void ReadManyToMany(string where, string what, string arg1, int id1)
+        {
+            DATA[where] = SQL.ReadManyToMany(where, what, arg1, id1);
         }
 
 
@@ -521,21 +408,23 @@ namespace Diplomaster
             DocNumber = num;
             FormParent = form1;
 
-            ReadCombo(comboBox1, "Юридическое лицо", "Название", "Иностранный", false);
-            ReadList(listBox1, "Юридическое лицо", "Название", "Иностранный", true);
-            ReadList(listBox2, "Юридическое лицо", "Название");
+            OwnTabControl.Initialize(tabControlMain);
+
+            SQL.ReadToCombo(comboBox1, "Юридическое лицо", "Название", "Иностранный", false);
+            SQL.ReadToList(listBox1, "Юридическое лицо", "Название", "Иностранный", true);
+            SQL.ReadToList(listBox2, "Юридическое лицо", "Название");
 
             if (DocNumber != -1) {
                 Text = "Редактирование Договора №" + DocNumber;
 
                 ReadDoc();
 
-                DATA["Иностранный заказчик"] = SQL.ReadManyToMany("Иностранный заказчик", "Юридическое лицо_id", "Договор_id", DocNumber);
-                DATA["Исполнитель договора"] = SQL.ReadManyToMany("Исполнитель договора", "Юридическое лицо_id", "Договор_id", DocNumber);
+                ReadManyToMany("Иностранный заказчик", "Юридическое лицо_id", "Договор_id", DocNumber);
+                ReadManyToMany("Исполнитель договора", "Юридическое лицо_id", "Договор_id", DocNumber);
 
                 FillAll();
 
-                FillFlowFiles();
+                ReadFlowFiles();
 
                 textBox1.ReadOnly = true;
                 textBox1.BackColor = Global.ColorReadOnly;
@@ -545,6 +434,7 @@ namespace Diplomaster
                 button2.Hide();
             }
 
+            //SaveFlowFiles(DocNumber);
         }
 
         public void SelectFileEdit(UserControlFileEdit uc)
@@ -573,121 +463,160 @@ namespace Diplomaster
                 
             }
 
-
         }
 
-
-        private void InsertManyToMany(SqlConnection conn, int NUM, string where, int[] ids, string arg1, string arg2)
-        {
-            int length;
-
-            if ((length = ids.Length) > 0)
-            {
-                string query = "INSERT INTO [" + where + "] ([" + arg1 + "], [" + arg2 + "])VALUES(@NUM0,@VAL0)";
-                int i;
-                string itos;
-
-                if (length > 1)
-                {
-                    for (i = 1; i < length; i++)
-                    {
-                        itos = i.ToString();
-                        query += ",(@NUM" + itos + ",@VAL" + itos + ")";
-                    }
-                }
-
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    for (i = 0; i < length; i++)
-                    {
-                        itos = i.ToString();
-                        cmd.Parameters.AddWithValue("@NUM" + itos, NUM);
-                        cmd.Parameters.AddWithValue("@VAL" + itos, ids[i]);
-                    }
-
-                    try
-                    {
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                    }
-                    catch (Exception ex)
-                    {
-                        conn.Close();
-                        MessageBox.Show(ex.ToString());
-                    }
-                    finally
-                    {
-                        conn.Close();
-                    }
-
-                }
-            }
-        }
-
-        private void DeleteManyToMany(SqlConnection conn, int NUM, string where, int[] ids, string arg1, string arg2)
-        {
-            int length;
-
-            if ((length = ids.Length) > 0)
-            {
-                string query = "DELETE FROM [" + where + "] WHERE [" + arg1 + "] = @NUM AND [" + arg2 + "] IN (@VAL0";
-                int i;
-                string itos;
-
-                if (length > 1)
-                {
-                    for (i = 1; i < length; i++)
-                    {
-                        itos = i.ToString();
-                        query += ",@VAL" + itos;
-                    }
-                }
-
-                query += ")";
-
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@NUM", NUM);
-                    for (i = 0; i < length; i++)
-                    {
-                        itos = i.ToString();
-                        cmd.Parameters.AddWithValue("@VAL" + itos, ids[i]);
-                    }
-
-                    try
-                    {
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                    }
-                    catch (Exception ex)
-                    {
-                        conn.Close();
-                        MessageBox.Show(ex.ToString());
-                    }
-                    finally
-                    {
-                        conn.Close();
-                    }
-
-                }
-            }
-        }
-
-        private void SaveManyMany(SqlConnection conn, int NUM, string where, int[] Sel, string arg1, string arg2)
+        private void SaveManyToMany(int NUM, string where, int[] Sel, string arg1, string arg2)
         {
             if (DocNumber == -1)
-                InsertManyToMany(conn, NUM, where, Sel, arg1, arg2);
+                SQL.InsertManyToMany(NUM, where, Sel, arg1, arg2);
             else
             {
                 //Insert = Sel.Except((int[])DATA[where]).ToArray();
-                InsertManyToMany(conn, NUM, where, Sel.Except((int[])DATA[where]).ToArray(), arg1, arg2);
-                
-                //Delete = ((int[])DATA[where]).Except(Sel).ToArray();
-                DeleteManyToMany(conn, NUM, where, ((int[])DATA[where]).Except(Sel).ToArray(), arg1, arg2);
+                SQL.InsertManyToMany(NUM, where, Sel.Except((int[])DATA[where]).ToArray(), arg1, arg2);
 
+                //Delete = ((int[])DATA[where]).Except(Sel).ToArray();
+                SQL.DeleteManyToMany(NUM, where, ((int[])DATA[where]).Except(Sel).ToArray(), arg1, arg2);
             }
         }
 
+        private void SaveFlowFiles(int NUM)
+        {
+            /*
+            MERGE INTO [Файл договора]
+                USING (
+                        VALUES (4, 1, NULL, 'TESTER1SSS.txt', 1), 
+                                (-1, 1, NULL, 'TESTER3.txt', 2)
+                        ) AS source ([Id], [Договор_id], [Файл], [Название], [Порядок])
+                    ON [Файл договора].[Id] = source.[Id]
+            WHEN MATCHED THEN
+                UPDATE SET [Название] = source.[Название], [Порядок] = source.[Порядок]
+            WHEN NOT MATCHED THEN
+                INSERT ([Договор_id], [Файл], [Название], [Порядок]) 
+                    VALUES ([Договор_id], [Файл], [Название], [Порядок]);
+            */
+
+            List<int> Dels = new List<int>();
+
+            int length = 0, i;
+
+            foreach (UserControlFileEdit uc in flowLayoutPanel1.Controls)
+            {
+                if (uc.Remove)
+                {
+                    if (uc.Id != -1)
+                        Dels.Add(uc.Id);
+                }
+                else
+                    length++;
+            }
+
+            if (length > 0)
+            {
+                string query = "MERGE INTO [Файл договора] USING ( ";
+                //"VALUES (@ID0,@NUM,@FILE0,@FILENAME0,@ORD0)";
+                string itos;
+
+                i = 0;
+                foreach (UserControlFileEdit uc in flowLayoutPanel1.Controls)
+                {
+                    if (!uc.Remove)
+                    {
+                        if (i == 0)
+                            query += "VALUES (@ID0,@NUM,@FILE0,@FILENAME0,@ORD0)";
+                        else
+                        {
+                            itos = i.ToString();
+                            query += ", (@ID" + itos + ",@NUM,@FILE" + itos + ",@FILENAME" + itos + ",@ORD" + itos + ")";
+                        }
+                        i++;
+                    }
+                }
+
+                query += ")AS source([Id],[Договор_id],[Файл],[Название],[Порядок]) " +
+                    "ON [Файл договора].[Id]=source.[Id] " +
+                    "WHEN MATCHED THEN " +
+                    "UPDATE SET [Название] = source.[Название],[Порядок] = source.[Порядок] " +
+                    "WHEN NOT MATCHED THEN " +
+                    "INSERT([Договор_id],[Файл],[Название],[Порядок]) " +
+                        "VALUES([Договор_id],[Файл],[Название],[Порядок]);";
+                if (Dels.Count > 0)
+                    query = "DELETE FROM [Файл договора] WHERE [Id] IN @DELS; ";
+
+                using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@NUM", NUM);
+
+                    if (Dels.Count > 0)
+                        cmd.AddArrayParameters("@DELS", Dels);
+                    
+                    i = 0;
+                    foreach (UserControlFileEdit uc in flowLayoutPanel1.Controls)
+                    {
+                        if (!uc.Remove)
+                        {
+                            itos = i.ToString();
+
+                            cmd.Parameters.AddWithValue("@ID" + itos, uc.Id);
+
+                            cmd.Parameters.Add("@FILE" + itos, SqlDbType.Image);
+                            if (uc.Id==-1)
+                                cmd.Parameters["@FILE" + itos].Value = CheckNull.File(uc.Data);
+                            else
+                                cmd.Parameters["@FILE" + itos].Value = DBNull.Value;
+
+                            cmd.Parameters.AddWithValue("@FILENAME" + itos, uc.GetFileName());
+                            cmd.Parameters.AddWithValue("@ORD" + itos, i);
+                            i++;
+                        }
+                    }
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery().ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        conn.Close();
+                        MessageBox.Show(ex.ToString());
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                }
+            }
+            else /* ------------- ELSE -------------*/
+            {
+                if (Dels.Count > 0)
+                {
+                    string query = "DELETE FROM [Файл договора] WHERE [Id] IN @DELS;";
+
+                    using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+                    {
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand(query, conn);
+
+                        cmd.AddArrayParameters("@DELS", Dels);
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            conn.Close();
+                            MessageBox.Show(ex.ToString());
+                        }
+                        finally
+                        {
+                            conn.Close();
+                        }
+                    }
+                }
+            }
+
+        }
 
         //public byte[] LoadFile(string path) {
         //    using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read)) {
@@ -733,24 +662,28 @@ namespace Diplomaster
 
         //    return count==0;
         //}
-
-
-        private void button1_Click(object sender, EventArgs e)
+        private bool ValidateDoc(out int NUM)
         {
             bool Check = true;
-
-            int NUM;
 
             if (DocNumber == -1)
             {
                 Check &= Validator.Apply(label1, textBox1, typeof(uint));
                 if (Check)
-                    Check &= Validator.Apply(label1, textBox1, SQL.CheckUnique("Договор", "Номер", Convert.ToInt32(textBox1.Text)));
+                {
+                    NUM = Convert.ToInt32(textBox1.Text);
+                    Check &= Validator.Apply(label1, textBox1, SQL.CheckUnique("Договор", "Номер", NUM));
+                }
+                else
+                    NUM = -1;
             }
+            else
+                NUM = DocNumber;
+
             Check &= Validator.Apply(label2, comboBox1);
             Check &= Validator.Apply(labelDate1, dateTimePicker1);
             Check &= Validator.Apply(labelDate2, dateTimePicker2, dateTimePicker1);
-            
+
             //if (!RemoveImage1)
             //    Check &= Validator.Apply(labelImg1, textBoxImg1, typeof(File));
             //if (!RemoveImage2)
@@ -763,28 +696,58 @@ namespace Diplomaster
 
             Check &= Validator.Apply(label11, textBox8, typeof(decimal), true);
             Check &= Validator.Apply(label12, textBox9, typeof(decimal), true);
-            
+
 
             Check &= Validator.Apply(label14, textBox11, typeof(float), true);
             Check &= Validator.Apply(label15, textBox12, typeof(float), true);
             Check &= Validator.Apply(label16, textBox13, typeof(float), true);
             Check &= Validator.Apply(label17, textBox14, typeof(float), true);
-            
+
+            return Check;
+        }
+
+        private bool ValidateStages()
+        {
+            bool Check = true;
+
+            return Check;
+        }
+
+        private bool ValidateArchive()
+        {
+            bool Check = true;
+
+            foreach (UserControlFileEdit uc in flowLayoutPanel1.Controls)
+            {
+                Check &= uc.ValidateFile();
+            }
+
+            return Check;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            bool Check = true;
+
+            int NUM;
+
+            Check &= Validator.Apply(tabContract, ValidateDoc(out NUM));
+            //Check &= Validator.Apply(tabStages, ValidateStages());
+            Check &= Validator.Apply(tabArchive, ValidateArchive());
+
+            //Refresh tabs after else
+
             //Check = false;
             if (Check)
             {
-                if (DocNumber == -1)
-                    NUM = Convert.ToInt32(textBox1.Text);
-                else
-                    NUM = DocNumber;
                 using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
                 {
                     string query;
 
                     if (DocNumber == -1)
                         query = "INSERT INTO [Договор] VALUES (@NUM, @DOP, @GEN, @VID, @TEMA, @NAIM, " +
-                            "@DATE1, @DATE2, @COUNT, @PRICE, @PRICE2, @MODEL, @VOL, @VOL2, @TRUD, @TRUD2, @PAGE, "+
-                            "@VED, @PRI, " + 
+                            "@DATE1, @DATE2, @COUNT, @PRICE, @PRICE2, @MODEL, @VOL, @VOL2, @TRUD, @TRUD2, @PAGE, " +
+                            "@VED, @PRI, " +
                             //"@IMG1, @IMGNAME1, @IMG2, @IMGNAME2, " + 
                             "@EDIT)";
                     else//
@@ -799,19 +762,19 @@ namespace Diplomaster
                             //"[Изображение1]=@IMG1, [Имя изображения1]=@IMGNAME1, [Изображение2]=@IMG2, [Имя изображения2]=@IMGNAME2, " +
                             "[Редактируется]=@EDIT WHERE [Номер]=@NUM";
 
-                        /*
-                        query = "UPDATE [Договор] SET " +
-                            "[Генеральный Заказчик_id]=@GEN, [Ведущий]=@VED, [Примечание]=@PRI, " +
-                            "[Вид Работ]=@VID, [Тема]=@TEMA, [Наименование Работ]=@NAIM, " +
-                            "[Начало Работ]=@DATE1, [Окончание Работ]=@DATE2, " +
-                            "[Количество]=@COUNT, [Цена]=@PRICE, [Цена За Единицу]=@PRICE2, [Модель Цены]=@MODEL, " +
-                            "[Объём Собственной Работы]=@VOL, [Объём КА]=@VOL2, " +
-                            "[Плановая Трудоёмкость]=@TRUD, [Фактическая Трудоёмкость]=@TRUD2, [Страница]=@PAGE, " +
-                            "[Имя Изображения1]=@IMGNAME1, [Имя Изображения2]=@IMGNAME2, [Изображение1]=@IMG1, [Изображение2]=@IMG2, " +
-                            "[Дополнительное Соглашение]=@DOP " +
-                            "WHERE [Номер]=@NUM";
-                        */
-                    
+                    /*
+                    query = "UPDATE [Договор] SET " +
+                        "[Генеральный Заказчик_id]=@GEN, [Ведущий]=@VED, [Примечание]=@PRI, " +
+                        "[Вид Работ]=@VID, [Тема]=@TEMA, [Наименование Работ]=@NAIM, " +
+                        "[Начало Работ]=@DATE1, [Окончание Работ]=@DATE2, " +
+                        "[Количество]=@COUNT, [Цена]=@PRICE, [Цена За Единицу]=@PRICE2, [Модель Цены]=@MODEL, " +
+                        "[Объём Собственной Работы]=@VOL, [Объём КА]=@VOL2, " +
+                        "[Плановая Трудоёмкость]=@TRUD, [Фактическая Трудоёмкость]=@TRUD2, [Страница]=@PAGE, " +
+                        "[Имя Изображения1]=@IMGNAME1, [Имя Изображения2]=@IMGNAME2, [Изображение1]=@IMG1, [Изображение2]=@IMG2, " +
+                        "[Дополнительное Соглашение]=@DOP " +
+                        "WHERE [Номер]=@NUM";
+                    */
+
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -839,7 +802,7 @@ namespace Diplomaster
                             cmd.Parameters.AddWithValue("@VED", CheckNull.String(textBox3.Text));
                             cmd.Parameters.AddWithValue("@PRI", CheckNull.String(textBox4.Text));
 
-                            
+
                             //if (RemoveImage1)
                             //{
                             //    cmd.Parameters.Add("@IMG1", SqlDbType.Image);
@@ -903,7 +866,7 @@ namespace Diplomaster
                             //    }
                             //}
 
-                            
+
                             //cmd.Parameters.Add("@IMG1", SqlDbType.Image);
                             //cmd.Parameters["@IMG1"].Value = DBNull.Value;
                             //cmd.Parameters.AddWithValue("@IMGNAME1", DBNull.Value);
@@ -928,12 +891,17 @@ namespace Diplomaster
                             FormParent.RefreshDocs();
                         }
                     }
-
-                    SaveManyMany(conn, NUM, "Иностранный заказчик", GetListBoxSelected(listBox1), "Договор_id", "Юридическое лицо_id");
-                    SaveManyMany(conn, NUM, "Исполнитель договора", GetListBoxSelected(listBox2), "Договор_id", "Юридическое лицо_id");
                 }
+                SaveManyToMany(NUM, "Иностранный заказчик", listBox1.GetListBoxSelected(), "Договор_id", "Юридическое лицо_id");
+                SaveManyToMany(NUM, "Исполнитель договора", listBox2.GetListBoxSelected(), "Договор_id", "Юридическое лицо_id");
+
+                SaveFlowFiles(NUM);
+
                 this.Close();
             }
+            else
+                tabControlMain.Refresh();
+
         }
 
         private void button2_Click(object sender, EventArgs e)

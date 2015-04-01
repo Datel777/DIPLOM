@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.Win32;
 using System.Windows.Forms;
+using System.Data.SqlClient;
+
 
 namespace Diplomaster
 {
@@ -33,7 +35,6 @@ namespace Diplomaster
         {
             return target == null || target.GetType() == typeof(System.DBNull);
         }
-
 
         public static void SaveFile(string path, byte[] data)
         {
@@ -64,6 +65,30 @@ namespace Diplomaster
             }
         }
 
+        public static int[] GetListBoxSelected(this ListBox listBox)
+        {
+            List<int> Set = new List<int>();
+
+            for (int i = 0; i < listBox.Items.Count; i++)
+            {
+                if (listBox.GetSelected(i))
+                    Set.Add((int)((BoxItem)listBox.Items[i]).Value);
+            }
+
+            return Set.ToArray();
+        }
+
+        public static void AddArrayParameters<T>(this SqlCommand cmd, string name, IEnumerable<T> values)
+        {
+            var names = string.Join(", ", values.Select((value, i) =>
+            {
+                var paramName = name + i;
+                cmd.Parameters.AddWithValue(paramName, value);
+                return paramName;
+            }));
+            cmd.CommandText = cmd.CommandText.Replace(name, "(" + names + ")");
+            //MessageBox.Show(names);
+        }
 
         //public static string GetDefaultApplication(string extension)
         //{

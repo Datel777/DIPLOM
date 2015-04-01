@@ -50,10 +50,10 @@ namespace Diplomaster
             {
                 HideCheckBox(e.Node);
                 //e.DrawDefault = true;
-                SolidBrush br = new SolidBrush(Color.Gray);
+                //SolidBrush br = new SolidBrush(Color.Gray);
                 Font font = new Font(e.Node.TreeView.Font, FontStyle.Bold);
-                e.Graphics.DrawString(e.Node.Text, font, br, e.Node.Bounds.X, e.Node.Bounds.Y);//Brushes.Black
-
+                //e.Graphics.DrawString(e.Node.Text, font, br, e.Node.Bounds.X, e.Node.Bounds.Y);//Brushes.Black
+                TextRenderer.DrawText(e.Graphics, e.Node.Text, font, e.Node.Bounds, Color.Gray);
             }
             else
             {

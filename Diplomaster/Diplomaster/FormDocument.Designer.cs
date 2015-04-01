@@ -30,11 +30,14 @@
         {
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.tabArchive = new System.Windows.Forms.TabPage();
+            this.tabArchive = new Diplomaster.OwnTabPage();
+            this.buttonAddFile = new System.Windows.Forms.Button();
+            this.buttonDown = new System.Windows.Forms.Button();
+            this.buttonUp = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.tabNested = new System.Windows.Forms.TabPage();
+            this.tabStages = new Diplomaster.OwnTabPage();
             this.tabControl2 = new System.Windows.Forms.TabControl();
-            this.tabContract = new System.Windows.Forms.TabPage();
+            this.tabContract = new Diplomaster.OwnTabPage();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -77,14 +80,11 @@
             this.label16 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.buttonUp = new System.Windows.Forms.Button();
-            this.buttonDown = new System.Windows.Forms.Button();
-            this.buttonAddFile = new System.Windows.Forms.Button();
+            this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabArchive.SuspendLayout();
-            this.tabNested.SuspendLayout();
+            this.tabStages.SuspendLayout();
             this.tabContract.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.tabControlMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -120,8 +120,43 @@
             this.tabArchive.Name = "tabArchive";
             this.tabArchive.Padding = new System.Windows.Forms.Padding(3);
             this.tabArchive.Size = new System.Drawing.Size(900, 494);
+            this.tabArchive.TabColor = System.Drawing.SystemColors.Control;
             this.tabArchive.TabIndex = 1;
             this.tabArchive.Text = "Архив";
+            // 
+            // buttonAddFile
+            // 
+            this.buttonAddFile.Location = new System.Drawing.Point(599, 6);
+            this.buttonAddFile.Name = "buttonAddFile";
+            this.buttonAddFile.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddFile.TabIndex = 21;
+            this.buttonAddFile.Text = "Добавить";
+            this.buttonAddFile.UseVisualStyleBackColor = true;
+            this.buttonAddFile.Click += new System.EventHandler(this.buttonAddFile_Click);
+            // 
+            // buttonDown
+            // 
+            this.buttonDown.Enabled = false;
+            this.buttonDown.Font = new System.Drawing.Font("Wingdings 3", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.buttonDown.Location = new System.Drawing.Point(563, 42);
+            this.buttonDown.Name = "buttonDown";
+            this.buttonDown.Size = new System.Drawing.Size(30, 30);
+            this.buttonDown.TabIndex = 20;
+            this.buttonDown.Text = "q";
+            this.buttonDown.UseVisualStyleBackColor = true;
+            this.buttonDown.Click += new System.EventHandler(this.buttonDown_Click);
+            // 
+            // buttonUp
+            // 
+            this.buttonUp.Enabled = false;
+            this.buttonUp.Font = new System.Drawing.Font("Wingdings 3", 16F);
+            this.buttonUp.Location = new System.Drawing.Point(563, 6);
+            this.buttonUp.Name = "buttonUp";
+            this.buttonUp.Size = new System.Drawing.Size(30, 30);
+            this.buttonUp.TabIndex = 19;
+            this.buttonUp.Text = "p";
+            this.buttonUp.UseVisualStyleBackColor = true;
+            this.buttonUp.Click += new System.EventHandler(this.buttonUp_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -135,16 +170,17 @@
             this.flowLayoutPanel1.TabIndex = 18;
             this.flowLayoutPanel1.Click += new System.EventHandler(this.flowLayoutPanel1_Click);
             // 
-            // tabNested
+            // tabStages
             // 
-            this.tabNested.BackColor = System.Drawing.SystemColors.Control;
-            this.tabNested.Controls.Add(this.tabControl2);
-            this.tabNested.Location = new System.Drawing.Point(4, 22);
-            this.tabNested.Name = "tabNested";
-            this.tabNested.Padding = new System.Windows.Forms.Padding(3);
-            this.tabNested.Size = new System.Drawing.Size(900, 494);
-            this.tabNested.TabIndex = 2;
-            this.tabNested.Text = "Этапы";
+            this.tabStages.BackColor = System.Drawing.SystemColors.Control;
+            this.tabStages.Controls.Add(this.tabControl2);
+            this.tabStages.Location = new System.Drawing.Point(4, 22);
+            this.tabStages.Name = "tabStages";
+            this.tabStages.Padding = new System.Windows.Forms.Padding(3);
+            this.tabStages.Size = new System.Drawing.Size(900, 494);
+            this.tabStages.TabColor = System.Drawing.SystemColors.Control;
+            this.tabStages.TabIndex = 2;
+            this.tabStages.Text = "Этапы";
             // 
             // tabControl2
             // 
@@ -203,6 +239,7 @@
             this.tabContract.Name = "tabContract";
             this.tabContract.Padding = new System.Windows.Forms.Padding(3);
             this.tabContract.Size = new System.Drawing.Size(900, 494);
+            this.tabContract.TabColor = System.Drawing.SystemColors.Control;
             this.tabContract.TabIndex = 0;
             this.tabContract.Text = "Договор";
             // 
@@ -555,69 +592,35 @@
             this.label17.TabIndex = 0;
             this.label17.Text = "Фактическая Трудоёмкость";
             // 
-            // tabControl1
+            // tabControlMain
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tabControlMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabContract);
-            this.tabControl1.Controls.Add(this.tabNested);
-            this.tabControl1.Controls.Add(this.tabArchive);
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(908, 520);
-            this.tabControl1.TabIndex = 18;
-            // 
-            // buttonUp
-            // 
-            this.buttonUp.Enabled = false;
-            this.buttonUp.Font = new System.Drawing.Font("Wingdings 3", 16F);
-            this.buttonUp.Location = new System.Drawing.Point(563, 6);
-            this.buttonUp.Name = "buttonUp";
-            this.buttonUp.Size = new System.Drawing.Size(30, 30);
-            this.buttonUp.TabIndex = 19;
-            this.buttonUp.Text = "p";
-            this.buttonUp.UseVisualStyleBackColor = true;
-            this.buttonUp.Click += new System.EventHandler(this.buttonUp_Click);
-            // 
-            // buttonDown
-            // 
-            this.buttonDown.Enabled = false;
-            this.buttonDown.Font = new System.Drawing.Font("Wingdings 3", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            this.buttonDown.Location = new System.Drawing.Point(563, 42);
-            this.buttonDown.Name = "buttonDown";
-            this.buttonDown.Size = new System.Drawing.Size(30, 30);
-            this.buttonDown.TabIndex = 20;
-            this.buttonDown.Text = "q";
-            this.buttonDown.UseVisualStyleBackColor = true;
-            this.buttonDown.Click += new System.EventHandler(this.buttonDown_Click);
-            // 
-            // buttonAddFile
-            // 
-            this.buttonAddFile.Location = new System.Drawing.Point(599, 6);
-            this.buttonAddFile.Name = "buttonAddFile";
-            this.buttonAddFile.Size = new System.Drawing.Size(75, 23);
-            this.buttonAddFile.TabIndex = 21;
-            this.buttonAddFile.Text = "Добавить";
-            this.buttonAddFile.UseVisualStyleBackColor = true;
-            this.buttonAddFile.Click += new System.EventHandler(this.buttonAddFile_Click);
+            this.tabControlMain.Controls.Add(this.tabContract);
+            this.tabControlMain.Controls.Add(this.tabStages);
+            this.tabControlMain.Controls.Add(this.tabArchive);
+            this.tabControlMain.Location = new System.Drawing.Point(0, 0);
+            this.tabControlMain.Name = "tabControlMain";
+            this.tabControlMain.SelectedIndex = 0;
+            this.tabControlMain.Size = new System.Drawing.Size(908, 520);
+            this.tabControlMain.TabIndex = 18;
             // 
             // FormDocument
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(907, 561);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.tabControlMain);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Name = "FormDocument";
             this.Text = "ДОГОВОР";
             this.tabArchive.ResumeLayout(false);
-            this.tabNested.ResumeLayout(false);
+            this.tabStages.ResumeLayout(false);
             this.tabContract.ResumeLayout(false);
             this.tabContract.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
+            this.tabControlMain.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -626,10 +629,10 @@
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TabPage tabArchive;
-        private System.Windows.Forms.TabPage tabNested;
+        private OwnTabPage tabArchive;
+        private OwnTabPage tabStages;
         private System.Windows.Forms.TabControl tabControl2;
-        private System.Windows.Forms.TabPage tabContract;
+        private OwnTabPage tabContract;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.TextBox textBox1;
@@ -673,7 +676,7 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl tabControlMain;
         private System.Windows.Forms.Button buttonDown;
         private System.Windows.Forms.Button buttonUp;
         private System.Windows.Forms.Button buttonAddFile;

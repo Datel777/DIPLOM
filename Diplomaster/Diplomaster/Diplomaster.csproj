@@ -99,6 +99,9 @@
       <DependentUpon>FormDocument.cs</DependentUpon>
     </Compile>
     <Compile Include="Global.cs" />
+    <Compile Include="OwnTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="OwnTreeView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

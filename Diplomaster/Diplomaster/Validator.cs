@@ -85,6 +85,15 @@ namespace Diplomaster
             return bull;
         }
 
+        static public bool Apply(OwnTabPage tab, bool bull)
+        {
+            if (bull)
+                tab.ResetTabColor();
+            else
+                tab.TabColor = Global.ColorError;
+
+            return bull;
+        }
 
         static public bool UInt(string str, bool cannull = false)
         {

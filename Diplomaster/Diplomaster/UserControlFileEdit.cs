@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using System.Data.SqlClient;
 using System.IO;
 using System.Diagnostics;
 
@@ -24,7 +23,7 @@ namespace Diplomaster
         public Process TempProcess;
         public byte[] Data = null;
         public bool Remove = false;
-        public bool FileChanged = false;
+        //public bool FileChanged = false;
         //public bool FileNew = false;
         FormDocument FormDocParent;
 
@@ -93,36 +92,28 @@ namespace Diplomaster
                 return;
             }
 
-            string query = "SELECT [Файл] FROM [Файл договора] WHERE [Id]=@ID";
+            object dat = SQL.GetOneFirst("Файл договора", "Файл", "Id", Id);
+            if (!dat.isnull())
+                Data = (byte[])dat;
+        }
 
-            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@ID", Id);
-                    try
-                    {
-                        conn.Open();
-                        object dat = cmd.ExecuteScalar();
-                        if (!dat.isnull())
-                            Data = (byte[])dat;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.ToString());
-                    }
-                    finally
-                    {
-                        conn.Close();
-                    }
-                }
-            }
+        public bool ValidateFile()
+        {
+            //bool Check = true;
+            //Check &= Validator.Apply(labelImg, textBoxImg1N, typeof(string));
+            return Validator.Apply(labelImg, textBoxImg1N, typeof(string));
         }
 
         private void buttonShow_Click(object sender, EventArgs e)
         {
             if (Data.isnull())
                 LoadFileData();
+
+            //if (Data.isnull())
+            //{
+            //    MessageBox.Show("Файл не найден");
+            //    return;
+            //}
 
             if (TempPath == null)
             {
