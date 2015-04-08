@@ -80,6 +80,7 @@
       <DependentUpon>DataBaseDataSet1.xsd</DependentUpon>
     </Compile>
     <Compile Include="Extensions.cs" />
+    <Compile Include="Fill.cs" />
     <Compile Include="FormReportFilter.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -142,6 +143,12 @@
     <Compile Include="UserControlSearch.Designer.cs">
       <DependentUpon>UserControlSearch.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControlUchet.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlUchet.Designer.cs">
+      <DependentUpon>UserControlUchet.cs</DependentUpon>
+    </Compile>
     <Compile Include="Validator.cs" />
     <EmbeddedResource Include="FormReportFilter.resx">
       <DependentUpon>FormReportFilter.cs</DependentUpon>
@@ -179,6 +186,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControlSearch.resx">
       <DependentUpon>UserControlSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlUchet.resx">
+      <DependentUpon>UserControlUchet.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="ClassDiagram1.cd" />
     <None Include="ClassDiagram2.cd" />

@@ -101,10 +101,6 @@ namespace Diplomaster
 
         public void InitializeTabControl(TabControl tabC)
         {
-            //UserControl myUserControl = new UserControlSearch();
-            //myUserControl.Dock = DockStyle.Fill;
-            //firstTabPage.Controls.Add(myUserControl);
-            //tabC.Controls.Add(firstTabPage);
             tabC.Controls.Add(CreateNewReportPage());
             tabC.Controls.Add(lastTabPage);
         }
@@ -112,12 +108,6 @@ namespace Diplomaster
         public TabPage CreateNewReportPage(bool getnum = true)
         {
             TabPage page;
-            //if (number == -1) 
-            //    page = new TabPage("----");
-            //else
-            //    page = new TabPage("Отчёт " + number.ToString());
-
-
             UserControl myUserControl;
 
 
@@ -197,21 +187,22 @@ namespace Diplomaster
 
         private void tabControl1_MouseClick(object sender, MouseEventArgs e) {
             if (e.Button == MouseButtons.Right) {
-                for (int i = 0; i < tabControl1.TabCount; ++i)
-                {
-                    if (tabControl1.GetTabRect(i).Contains(e.Location))
+                if (tabControl1.TabCount > 2)
+                    for (int i = 0; i < tabControl1.TabCount; ++i)
                     {
-                        TabPage tab = tabControl1.TabPages[i];
-
-                        //if (tab!=firstTabPage && tab!=lastTabPage)
-                        if (tab != lastTabPage)
+                        if (tabControl1.GetTabRect(i).Contains(e.Location))
                         {
-                            ((UserControlReport)tab.Controls[0]).CloseFormFilter();
-                            tabControl1.TabPages.Remove(tab);
+                            TabPage tab = tabControl1.TabPages[i];
+
+                            //if (tab!=firstTabPage && tab!=lastTabPage)
+                            if (tab != lastTabPage)
+                            {
+                                ((UserControlReport)tab.Controls[0]).CloseFormFilter();
+                                tabControl1.TabPages.Remove(tab);
+                            }
+                            //this.contextMenuStrip1.Show(this.tabControl1, e.Location);
                         }
-                        //this.contextMenuStrip1.Show(this.tabControl1, e.Location);
                     }
-                }
             }
         }
 

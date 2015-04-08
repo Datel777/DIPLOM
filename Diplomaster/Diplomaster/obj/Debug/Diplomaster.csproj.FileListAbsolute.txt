@@ -43,3 +43,4 @@ C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diploma
 C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.UserControlFormEconomic.resources
 C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.UserControlFormStage.resources
 C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.FormReportFilter.resources
+C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\obj\Debug\Diplomaster.UserControlUchet.resources

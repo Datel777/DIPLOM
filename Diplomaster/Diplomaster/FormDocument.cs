@@ -21,103 +21,41 @@ namespace Diplomaster
         public FormStart FormParent;
         public Hashtable DATA = new Hashtable();
 
-        //public bool RemoveImage1 = false;
-        //public bool RemoveImage2 = false;
-        //public int FlowSelected = -1;
+        OwnTabPage lastTabPage = new OwnTabPage("+");
+
         public UserControlFileEdit FlowSelected;
-
-
         /*
-        public void LoadList(int number)
+        public void FillTabControlStages(TabControl tabC)
         {
-            string query = "SELECT [id], [Название] FROM [Заказчик] WHERE [Иностранный] = @F";// WHERE [Иностранный]=0
-            
-            if (number == -1) {
-                using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
-                {
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@F", true);
+            int[] ids = (int[])DATA["Этап договора"];
 
-                    using (SqlDataReader rdr = cmd.ExecuteReader())
-                    {
-                        try
-                        {
-                            while (rdr.Read())
-                            {
-                                BoxItem item = new BoxItem();
+            if (ids != null && ids.Length > 0)
+                foreach (int id in ids)
+                    tabC.Controls.Add(CreateNewStagePage(id));
+            else
+                tabC.Controls.Add(CreateNewStagePage());
 
-                                item.Text = rdr.GetString(1);
-                                item.Value = rdr.GetInt32(0);
-
-                                listBox1.Items.Add(item);
-                            }
-                        }
-                        finally
-                        {
-                            rdr.Close();
-                            conn.Close();
-                        }
-                    }
-                }
-            } else {
-                string query2 = "SELECT [Заказчик] FROM [Инозаказчик] WHERE [Номер Договора]=@NUM";
-
-                Hashtable hash = new Hashtable();
-
-                using (SqlConnection conn = new SqlConnection(Global.ConnectionString)) {
-                    conn.Open();
-
-                    SqlCommand cmd2 = new SqlCommand(query2, conn);
-                    cmd2.Parameters.AddWithValue("@NUM", number);
-
-                    using (SqlDataReader rdr = cmd2.ExecuteReader()) {
-                        try {
-                            while (rdr.Read())
-                                hash.Add(rdr.GetInt32(0), true);
-                        }
-                        finally
-                        {
-                            rdr.Close();
-                        }
-                    }
-
-
-
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@F", true);
-
-                    using (SqlDataReader rdr = cmd.ExecuteReader())
-                    {
-                        try
-                        {
-                            int ind, i = 0;
-                            while (rdr.Read())
-                            {
-                                BoxItem item = new BoxItem();
-
-                                ind = rdr.GetInt32(0);
-                                item.Text = rdr.GetString(1);
-                                item.Value = ind;
-
-                                listBox1.Items.Add(item);
-
-                                if (hash[ind] != null)
-                                    listBox1.SetSelected(i, true);
-                                i++;
-                            }
-                        }
-                        finally
-                        {
-                            rdr.Close();
-                            conn.Close();
-                        }
-                    }
-                }
-            }
+            tabC.Controls.Add(lastTabPage);
         }
         */
+        public TabPage CreateNewStagePage(Hashtable data = null)
+        {
+            OwnTabPage page;
+            UserControl myUserControl;
+            
+            if (data == null)
+                page = new OwnTabPage("Этап ----");
+            else
+                page = new OwnTabPage("Этап № " + data["Id"].ToString());
+            myUserControl = new UserControlFormStage(data);
 
+            myUserControl.Dock = DockStyle.Fill;
+            page.Controls.Add(myUserControl);
+
+            return page;
+        }
+        
+        /*
         public void ReadDoc()
         {
             string query = "SELECT * FROM [Договор] WHERE [Номер]=@NUM";
@@ -169,6 +107,7 @@ namespace Diplomaster
                 }
             }
         }
+        */
 
         public void SelectCombo(ComboBox combo, object val)
         {
@@ -206,49 +145,6 @@ namespace Diplomaster
                 list.SetSelected(id, true);
         }
 
-        public void FillTextBox(TextBox textbox, object val)
-        {
-            if (val.isnull())
-                textbox.Text = "";
-            else
-                textbox.Text = (string)val;
-        }
-
-        public void FillTextBoxInt(TextBox textbox, object val)
-        {
-            if (val.isnull())
-                textbox.Text = "";
-            else
-                textbox.Text = Convert.ToString((int)val);
-        }
-
-        public void FillTextBoxFloat(TextBox textbox, object val)
-        {
-            if (val.isnull())
-                textbox.Text = "";
-            else
-                textbox.Text = Convert.ToString((float)Convert.ToDecimal(val));
-        }
-
-        public void FillTextBoxDecimal(TextBox textbox, object val)
-        {
-            if (val.isnull())
-                textbox.Text = "";
-            else
-                textbox.Text = Convert.ToString((decimal)val);
-        }
-        
-        public void FillDateTimePicker(DateTimePicker picker, object val)
-        {
-            if (val.isnull())
-            {
-                picker.Value = Global.MinDate;
-                picker.Format = DateTimePickerFormat.Custom;
-                picker.CustomFormat = " ";
-            }
-            else
-                picker.Value = (DateTime)val;
-        }
 
         //public void FillImageSet(TextBox textBoxName, TextBox textBoxPath, Button chooseButton, Button downloadButton, Button deleteButton, object data, object filename)
         //{
@@ -266,33 +162,31 @@ namespace Diplomaster
 
         public void FillAll()
         {
-            textBox1.Text = Convert.ToString(DocNumber);
+            //textBox1.Text = Convert.ToString(DocNumber);
+            Fill.TextBoxInt(textBox1, DocNumber);
 
             SelectCombo(comboBox1, DATA["Генеральный заказчик_id"]);
             SelectList(listBox1, DATA["Иностранный заказчик"]);
             SelectList(listBox2, DATA["Исполнитель договора"]);
 
-            FillTextBox(textBox16, DATA["Дополнительное соглашение"]);
-            FillTextBox(textBox2, DATA["Вид работ"]);
-            FillTextBox(textBox5, DATA["Тема"]);
-            FillTextBox(textBox6, DATA["Наименование работ"]);
-            FillTextBoxInt(textBox7, DATA["Количество"]);
-            FillTextBoxDecimal(textBox8, DATA["Цена"]);
-            FillTextBoxDecimal(textBox9, DATA["Цена за единицу"]);
-            FillTextBoxInt(textBox10, DATA["Модель цены"]);
-            FillTextBoxFloat(textBox11, DATA["Объём собственной работы"]);
-            FillTextBoxFloat(textBox12, DATA["Объём КА"]);
-            FillTextBoxFloat(textBox13, DATA["Плановая трудоёмкость"]);
-            FillTextBoxFloat(textBox14, DATA["Фактическая трудоёмкость"]);
-            FillTextBoxInt(textBox15, DATA["Страница"]);
-            FillTextBox(textBox3, DATA["Ведущий"]);
-            FillTextBox(textBox4, DATA["Примечание"]);
+            Fill.TextBox(textBox16, DATA["Дополнительное соглашение"]);
+            Fill.TextBox(textBox2, DATA["Вид работ"]);
+            Fill.TextBox(textBox5, DATA["Тема"]);
+            Fill.TextBox(textBox6, DATA["Наименование работ"]);
+            Fill.TextBoxInt(textBox7, DATA["Количество"]);
+            Fill.TextBoxDecimal(textBox8, DATA["Цена"]);
+            Fill.TextBoxDecimal(textBox9, DATA["Цена за единицу"]);
+            Fill.TextBoxInt(textBox10, DATA["Модель цены"]);
+            Fill.TextBoxFloat(textBox11, DATA["Объём собственной работы"]);
+            Fill.TextBoxFloat(textBox12, DATA["Объём КА"]);
+            Fill.TextBoxFloat(textBox13, DATA["Плановая трудоёмкость"]);
+            Fill.TextBoxFloat(textBox14, DATA["Фактическая трудоёмкость"]);
+            Fill.TextBoxInt(textBox15, DATA["Страница"]);
+            Fill.TextBox(textBox3, DATA["Ведущий"]);
+            Fill.TextBox(textBox4, DATA["Примечание"]);
 
-            //FillImageSet(textBoxImg1N, textBoxImg1, buttonImg1_1, buttonImg1_2, buttonImg1_3, DATA["Изображение1"], DATA["Имя изображения1"]);
-            //FillImageSet(textBoxImg2N, textBoxImg2, buttonImg2_1, buttonImg2_2, buttonImg2_3, DATA["Изображение2"], DATA["Имя изображения2"]);
-
-            FillDateTimePicker(dateTimePicker1, DATA["Начало работ"]);
-            FillDateTimePicker(dateTimePicker2, DATA["Окончание работ"]);
+            Fill.DateTimePicker(dateTimePicker1, DATA["Начало работ"]);
+            Fill.DateTimePicker(dateTimePicker2, DATA["Окончание работ"]);
         }
 
         /*
@@ -384,7 +278,7 @@ namespace Diplomaster
             List<int> ids = new List<int>();
             int id;
 
-            foreach (Tuple<object, object> turple in SQL.GetTwoOrder("Файл договора", "Id", "Название", "Порядок"))
+            foreach (Tuple<object, object> turple in SQL.GetTwoOrder("Файл договора", "Id", "Название", "Порядок", true, "Договор_id", DocNumber))
             {
                 id = (int)turple.Item1;
                 UserControlFileEdit uc = new UserControlFileEdit(this, (string)turple.Item2, id);
@@ -395,11 +289,35 @@ namespace Diplomaster
             DATA["Файл договора"] = ids.ToArray();
         }
 
-        public void ReadManyToMany(string where, string what, string arg1, int id1)
+        public void ReadStages()
         {
-            DATA[where] = SQL.ReadManyToMany(where, what, arg1, id1);
+            List<int> ids = new List<int>();
+
+            foreach (Hashtable data in SQL.ReadAllMultiple("Этап договора", "Договор_id", DocNumber))
+            {
+                ids.Add((int)data["Id"]);
+                tabControlStages.Controls.Add(CreateNewStagePage(data));
+            }
+
+            if (ids.Count == 0)
+                tabControlStages.Controls.Add(CreateNewStagePage(null));
+
+            tabControlStages.Controls.Add(lastTabPage);
+
+            DATA["Этап договора"] = ids.ToArray();
+            //MessageBox.Show(((Array)DATA["Этап договора"]).ToString2());
         }
 
+        public void NewStages()
+        {
+            tabControlStages.Controls.Add(CreateNewStagePage(null));
+            tabControlStages.Controls.Add(lastTabPage);
+        }
+
+        public void ReadManyToMany(string where, string what, string arg1, int id1, string orderby = null)
+        {
+            DATA[where] = SQL.ReadManyToMany(where, what, arg1, id1, orderby);
+        }
 
         public FormDocument(FormStart form1, int num = -1)
         {
@@ -409,7 +327,8 @@ namespace Diplomaster
             FormParent = form1;
 
             OwnTabControl.Initialize(tabControlMain);
-
+            OwnTabControl.Initialize(tabControlStages);
+            
             SQL.ReadToCombo(comboBox1, "Юридическое лицо", "Название", "Иностранный", false);
             SQL.ReadToList(listBox1, "Юридическое лицо", "Название", "Иностранный", true);
             SQL.ReadToList(listBox2, "Юридическое лицо", "Название");
@@ -417,22 +336,28 @@ namespace Diplomaster
             if (DocNumber != -1) {
                 Text = "Редактирование Договора №" + DocNumber;
 
-                ReadDoc();
+                DATA = SQL.ReadAll("Договор", "Номер", DocNumber);
 
                 ReadManyToMany("Иностранный заказчик", "Юридическое лицо_id", "Договор_id", DocNumber);
                 ReadManyToMany("Исполнитель договора", "Юридическое лицо_id", "Договор_id", DocNumber);
+                //ReadManyToMany("Этап договора", "Id", "Договор_id", DocNumber, "Номер");
 
                 FillAll();
 
                 ReadFlowFiles();
+                ReadStages();
 
                 textBox1.ReadOnly = true;
                 textBox1.BackColor = Global.ColorReadOnly;
             } else {
-                FillDateTimePicker(dateTimePicker1, null);
-                FillDateTimePicker(dateTimePicker2, null);
+                Fill.DateTimePicker(dateTimePicker1, null);
+                Fill.DateTimePicker(dateTimePicker2, null);
+                NewStages();
                 button2.Hide();
             }
+
+            //FillTabControlStages(tabControlStages);
+
 
             //SaveFlowFiles(DocNumber);
         }
@@ -618,50 +543,6 @@ namespace Diplomaster
 
         }
 
-        //public byte[] LoadFile(string path) {
-        //    using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read)) {
-        //        int numBytesToRead = (int)fs.Length;
-        //        int numBytesRead = 0;
-        //        byte[] data = new byte[fs.Length];
-
-        //        while (numBytesToRead > 0) {
-        //            int n = fs.Read(data, numBytesRead, numBytesToRead);
-        //            if (n == 0)
-        //                break;
-
-        //            numBytesRead += n;
-        //            numBytesToRead -= n;
-        //        }
-        //        return data;
-        //    }
-        //}
-
-        //public void SaveFile(string path, byte[] data)
-        //{
-        //    using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-        //    {
-        //        fs.Write(data, 0, data.Length);
-        //    }
-        //}
-
-        //private bool CheckUniqueNumber(int number)
-        //{
-        //    int count = 0;
-
-        //    string query = "SELECT COUNT (*) FROM [Договор] WHERE [Номер] = @NUM";
-
-        //    using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
-        //    {
-        //        conn.Open();
-        //        SqlCommand cmd = new SqlCommand(query, conn);
-
-        //        cmd.Parameters.AddWithValue("@NUM", number);
-
-        //        count = (Int32)cmd.ExecuteScalar();
-        //    }
-
-        //    return count==0;
-        //}
         private bool ValidateDoc(out int NUM)
         {
             bool Check = true;
@@ -684,11 +565,6 @@ namespace Diplomaster
             Check &= Validator.Apply(labelDate1, dateTimePicker1);
             Check &= Validator.Apply(labelDate2, dateTimePicker2, dateTimePicker1);
 
-            //if (!RemoveImage1)
-            //    Check &= Validator.Apply(labelImg1, textBoxImg1, typeof(File));
-            //if (!RemoveImage2)
-            //    Check &= Validator.Apply(labelImg2, textBoxImg2, typeof(File));
-
             Check &= Validator.Apply(label10, textBox7, typeof(uint), true);
             Check &= Validator.Apply(label18, textBox15, typeof(uint), true);
 
@@ -710,6 +586,15 @@ namespace Diplomaster
         {
             bool Check = true;
 
+            foreach (OwnTabPage tab in tabControlStages.TabPages)
+            {
+                if (tab != lastTabPage)
+                {
+                    UserControlFormStage uc = (UserControlFormStage)tab.Controls[0];
+                    Check &= Validator.Apply(tab, uc.ValidateStage());
+                }
+            }
+
             return Check;
         }
 
@@ -725,6 +610,8 @@ namespace Diplomaster
             return Check;
         }
 
+        
+
         private void button1_Click(object sender, EventArgs e)
         {
             bool Check = true;
@@ -732,7 +619,7 @@ namespace Diplomaster
             int NUM;
 
             Check &= Validator.Apply(tabContract, ValidateDoc(out NUM));
-            //Check &= Validator.Apply(tabStages, ValidateStages());
+            Check &= Validator.Apply(tabStages, ValidateStages());
             Check &= Validator.Apply(tabArchive, ValidateArchive());
 
             //Refresh tabs after else
@@ -803,77 +690,6 @@ namespace Diplomaster
                             cmd.Parameters.AddWithValue("@PRI", CheckNull.String(textBox4.Text));
 
 
-                            //if (RemoveImage1)
-                            //{
-                            //    cmd.Parameters.Add("@IMG1", SqlDbType.Image);
-                            //    cmd.Parameters["@IMG1"].Value = DBNull.Value;
-                            //    cmd.Parameters.AddWithValue("@IMGNAME1", DBNull.Value);
-
-                            //}
-                            //else
-                            //{
-                            //    if (textBoxImg1.Text == "")
-                            //    {
-                            //        if (textBoxImg1N.Text == "")
-                            //        {
-                            //            cmd.Parameters.Add("@IMG1", SqlDbType.Image);
-                            //            cmd.Parameters["@IMG1"].Value = DBNull.Value;
-                            //            cmd.Parameters.AddWithValue("@IMGNAME1", DBNull.Value);
-                            //        }
-                            //        else
-                            //        {
-                            //            cmd.Parameters.AddWithValue("@IMG1", DATA["Изображение1"]);
-                            //            cmd.Parameters.AddWithValue("@IMGNAME1", DATA["Имя изображения1"]);
-                            //        }
-                            //    }
-                            //    else
-                            //    {
-                            //        byte[] Image1 = LoadFile(textBoxImg1.Text);
-                            //        cmd.Parameters.AddWithValue("@IMG1", CheckNull.File(Image1));
-                            //        cmd.Parameters.AddWithValue("@IMGNAME1", CheckNull.FileName(Image1, Path.GetFileName(textBoxImg1.Text)));
-                            //    }
-                            //}
-
-
-
-                            //if (RemoveImage2)
-                            //{
-                            //    cmd.Parameters.Add("@IMG2", SqlDbType.Image);
-                            //    cmd.Parameters["@IMG2"].Value = DBNull.Value;
-                            //    cmd.Parameters.AddWithValue("@IMGNAME2", DBNull.Value);
-                            //}
-                            //else
-                            //{
-                            //    if (textBoxImg2.Text == "")
-                            //    {
-                            //        if (textBoxImg2N.Text == "")
-                            //        {
-                            //            cmd.Parameters.Add("@IMG2", SqlDbType.Image);
-                            //            cmd.Parameters["@IMG2"].Value = DBNull.Value;
-                            //            cmd.Parameters.AddWithValue("@IMGNAME2", DBNull.Value);
-                            //        }
-                            //        else
-                            //        {
-                            //            cmd.Parameters.AddWithValue("@IMG2", DATA["Изображение2"]);
-                            //            cmd.Parameters.AddWithValue("@IMGNAME2", DATA["Имя изображения2"]);
-                            //        }
-                            //    }
-                            //    else
-                            //    {
-                            //        byte[] Image2 = LoadFile(textBoxImg2.Text);
-                            //        cmd.Parameters.AddWithValue("@IMG2", CheckNull.File(Image2));
-                            //        cmd.Parameters.AddWithValue("@IMGNAME2", CheckNull.FileName(Image2, Path.GetFileName(textBoxImg2.Text)));
-                            //    }
-                            //}
-
-
-                            //cmd.Parameters.Add("@IMG1", SqlDbType.Image);
-                            //cmd.Parameters["@IMG1"].Value = DBNull.Value;
-                            //cmd.Parameters.AddWithValue("@IMGNAME1", DBNull.Value);
-
-                            //cmd.Parameters.Add("@IMG2", SqlDbType.Image);
-                            //cmd.Parameters["@IMG2"].Value = DBNull.Value;
-                            //cmd.Parameters.AddWithValue("@IMGNAME2", DBNull.Value);
 
                             cmd.Parameters.AddWithValue("@EDIT", false);
 
@@ -929,189 +745,6 @@ namespace Diplomaster
                 Close();
             }
         }
-
-        //private void buttonImg1_1_Click(object sender, EventArgs e)
-        //{
-        //    if (textBoxImg1.Text == "")
-        //    {
-        //        OpenFileDialog openFileDialog1 = new OpenFileDialog();
-
-        //        openFileDialog1.InitialDirectory = Global.LastDirectoryPath;
-        //        openFileDialog1.Filter = "All files (*.*)|*.*";
-        //        openFileDialog1.RestoreDirectory = true;
-
-        //        if (openFileDialog1.ShowDialog() == DialogResult.OK)
-        //        {
-        //            try
-        //            {
-        //                if (openFileDialog1.FileName != null)
-        //                {
-        //                    textBoxImg1.Text = openFileDialog1.FileName;
-        //                    buttonImg1_1.Text = "Отмена";
-        //                }
-        //                Global.LastDirectoryPath = Path.GetDirectoryName(openFileDialog1.FileName);
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                MessageBox.Show(ex.Message);
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        textBoxImg1.Text = "";
-        //        buttonImg1_1.Text = "Обзор";
-        //    }
-        //}
-
-        //private void buttonImg1_2_Click(object sender, EventArgs e)
-        //{
-        //    SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-
-        //    saveFileDialog1.InitialDirectory = Global.LastDirectoryPath;
-        //    saveFileDialog1.Filter = "All files (*.*)|*.*";
-        //    saveFileDialog1.RestoreDirectory = true;
-        //    saveFileDialog1.FileName = (string)DATA["Имя изображения1"];
-
-        //    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-        //    {
-        //        try
-        //        {
-        //            SaveFile(saveFileDialog1.FileName, (byte[])DATA["Изображение1"]);
-        //            Global.LastDirectoryPath = Path.GetDirectoryName(saveFileDialog1.FileName);
-
-        //            var result = MessageBox.Show("Открыть папку с файлом?",
-        //                                 "Показать файл",
-        //                                 MessageBoxButtons.YesNo,
-        //                                 MessageBoxIcon.Question);
-
-        //            if (result == DialogResult.Yes)
-        //            {
-        //                ProcessStartInfo info = new ProcessStartInfo();
-        //                info.FileName = "explorer";
-        //                info.Arguments = string.Format("/e, /select, \"{0}\"", saveFileDialog1.FileName);
-        //                Process.Start(info);
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            MessageBox.Show(ex.Message);
-        //        }
-        //    }
-        //}
-
-        //private void buttonImg1_3_Click(object sender, EventArgs e)
-        //{
-        //    RemoveImage1 = !RemoveImage1;
-        //    if (RemoveImage1)
-        //    {
-        //        buttonImg1_3.Text = "Восстановить";
-        //        buttonImg1_1.Enabled = false;
-        //        buttonImg1_2.Enabled = false;
-        //        textBoxImg1.Enabled = false;
-        //        textBoxImg1N.Enabled = false;
-        //    }
-        //    else
-        //    {
-        //        buttonImg1_3.Text = "Удалить";
-        //        buttonImg1_1.Enabled = true;
-        //        buttonImg1_2.Enabled = true;
-        //        textBoxImg1.Enabled = true;
-        //        textBoxImg1N.Enabled = true;
-        //    }
-        //}
-
-        //private void buttonImg2_1_Click(object sender, EventArgs e)
-        //{
-        //    if (textBoxImg2.Text == "")
-        //    {
-        //        OpenFileDialog openFileDialog1 = new OpenFileDialog();
-
-        //        openFileDialog1.InitialDirectory = Global.LastDirectoryPath;
-        //        openFileDialog1.Filter = "All files (*.*)|*.*";
-        //        openFileDialog1.RestoreDirectory = true;
-
-        //        if (openFileDialog1.ShowDialog() == DialogResult.OK)
-        //        {
-        //            try
-        //            {
-        //                if (openFileDialog1.FileName != null)
-        //                {
-        //                    textBoxImg2.Text = openFileDialog1.FileName;
-        //                    buttonImg2_1.Text = "Отмена";
-        //                }
-        //                Global.LastDirectoryPath = Path.GetDirectoryName(openFileDialog1.FileName);
-
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                MessageBox.Show(ex.Message);
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        textBoxImg2.Text = "";
-        //        buttonImg2_1.Text = "Обзор";
-        //    }
-        //}
-
-        //private void buttonImg2_2_Click(object sender, EventArgs e)
-        //{
-        //    SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-
-        //    saveFileDialog1.InitialDirectory = Global.LastDirectoryPath;
-        //    saveFileDialog1.Filter = "All files (*.*)|*.*";
-        //    saveFileDialog1.RestoreDirectory = true;
-        //    saveFileDialog1.FileName = (string)DATA["Имя изображения2"];
-
-        //    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-        //    {
-        //        try
-        //        {
-        //            SaveFile(saveFileDialog1.FileName, (byte[])DATA["Изображение2"]);
-        //            Global.LastDirectoryPath = Path.GetDirectoryName(saveFileDialog1.FileName);
-
-        //            var result = MessageBox.Show("Открыть папку с файлом?",
-        //                                 "Показать файл",
-        //                                 MessageBoxButtons.YesNo,
-        //                                 MessageBoxIcon.Question);
-
-        //            if (result == DialogResult.Yes)
-        //            {
-        //                ProcessStartInfo info = new ProcessStartInfo();
-        //                info.FileName = "explorer";
-        //                info.Arguments = string.Format("/e, /select, \"{0}\"", saveFileDialog1.FileName);
-        //                Process.Start(info);
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            MessageBox.Show(ex.Message);
-        //        }
-        //    }
-        //}
-
-        //private void buttonImg2_3_Click(object sender, EventArgs e)
-        //{
-        //    RemoveImage2 = !RemoveImage2;
-        //    if (RemoveImage2)
-        //    {
-        //        buttonImg2_3.Text = "Восстановить";
-        //        buttonImg2_1.Enabled = false;
-        //        buttonImg2_2.Enabled = false;
-        //        textBoxImg2.Enabled = false;
-        //        textBoxImg2N.Enabled = false;
-        //    }
-        //    else
-        //    {
-        //        buttonImg2_3.Text = "Удалить";
-        //        buttonImg2_1.Enabled = true;
-        //        buttonImg2_2.Enabled = true;
-        //        textBoxImg2.Enabled = true;
-        //        textBoxImg2N.Enabled = true;
-        //    }
-        //}
 
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
@@ -1212,6 +845,39 @@ namespace Diplomaster
             newControl.Data = Extensions.LoadFile(path);
             //newControl.AddImageSet(-1, Path.GetFileName(path));
             flowLayoutPanel1.Controls.Add(newControl);
+        }
+
+
+        private void tabControlStages_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (tabControlStages.TabCount > 2)
+                    for (int i = 0; i < tabControlStages.TabCount; ++i)
+                    {
+                        if (tabControlStages.GetTabRect(i).Contains(e.Location))
+                        {
+                            TabPage tab = tabControlStages.TabPages[i];
+
+                            //if (tab!=firstTabPage && tab!=lastTabPage)
+                            if (tab != lastTabPage)
+                                tabControlStages.TabPages.Remove(tab);
+                            //this.contextMenuStrip1.Show(this.tabControl1, e.Location);
+                        }
+                    }
+            }
+        }
+
+        private void tabControlStages_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControlStages.SelectedTab == lastTabPage)
+            {
+                TabPage page = CreateNewStagePage();
+
+                tabControlStages.TabPages.Insert(tabControlStages.SelectedIndex, page);
+                tabControlStages.SelectedTab = page;
+            }
+
         }
 
     }

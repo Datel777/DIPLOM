@@ -77,18 +77,27 @@ namespace Diplomaster
             return result;
         }
 
-        public static List<Tuple<object, object>> GetTwoOrder(string where, string what1, string what2, string order, bool asc = true)
+        public static List<Tuple<object, object>> GetTwoOrder(string where, string what1, string what2, string order, bool asc = true, string arg1 = null, object val1 = null)
         {
             List<Tuple<object, object>> result = new List<Tuple<object, object>>();
 
-            string query = "SELECT [" + what1 + "],[" + what2 + "] FROM [" + where + "] ORDER BY [" + order + "] ";
+            string query = "SELECT [" + what1 + "],[" + what2 + "] FROM [" + where + "]";
 
+            if (arg1 != null)
+                query += " WHERE [" + arg1 + "] = @ARG1";
+
+            query += " ORDER BY [" + order + "] ";
             query += asc ? "ASC" : "DESC";
 
             using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
             {
+
                 conn.Open();
                 SqlCommand cmd = new SqlCommand(query, conn);
+
+                if (arg1 != null)
+                    cmd.Parameters.AddWithValue("@ARG1", val1);
+
                 using (SqlDataReader rdr = cmd.ExecuteReader())
                 {
                     try
@@ -331,11 +340,92 @@ namespace Diplomaster
             return result;
         }
 
-        public static int[] ReadManyToMany(string where, string what, string arg1, int id1)
+        public static Hashtable ReadAll(string where, string arg1, object val1)
+        {
+            Hashtable data = new Hashtable();
+
+            string query = "SELECT * FROM [" + where + "] WHERE [" + arg1 + "]=@ARG1";
+
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ARG1", val1);
+                    try
+                    {
+                        conn.Open();
+                        using (SqlDataReader rdr = cmd.ExecuteReader())
+                        {
+                            if (rdr.Read())
+                            {
+                                for (int i = 0; i < rdr.FieldCount; i++)
+                                    data.Add(rdr.GetName(i), rdr.GetValue(i));
+                            }
+                            rdr.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+
+                }
+            }
+            return data;
+        }
+
+        public static List<Hashtable> ReadAllMultiple(string where, string arg1, object val1)
+        {
+            List<Hashtable> result = new List<Hashtable>();
+
+            string query = "SELECT * FROM [" + where + "] WHERE [" + arg1 + "]=@ARG1";
+
+            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ARG1", val1);
+                    try
+                    {
+                        conn.Open();
+                        using (SqlDataReader rdr = cmd.ExecuteReader())
+                        {
+                            if (rdr.Read())
+                            {
+                                Hashtable data = new Hashtable();
+                                for (int i = 0; i < rdr.FieldCount; i++)
+                                    data.Add(rdr.GetName(i), rdr.GetValue(i));
+                                result.Add(data);
+                            }
+                            rdr.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+
+                }
+            }
+            return result;
+        }
+
+        public static int[] ReadManyToMany(string where, string what, string arg1, int id1, string orderby = null)
         {
             List<int> result = new List<int>();
             
             string query = "SELECT [" + what + "] FROM [" + where + "] WHERE [" + arg1 + "] = @ID";
+
+            if (orderby != null)
+                query += " ORDER BY [" + orderby + "] ASC";
 
             using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
             {
@@ -500,103 +590,7 @@ namespace Diplomaster
             }
         }
 
-        //public static void InsertManyToMany(int NUM, string where, Hashtable Hash, string arg1)
-        //{
-        //    //int length;
-
-        //    //string query = "INSERT INTO [" + where + "] ([" + arg1 + "], [" + arg2 + "])VALUES(@NUM,@VAL0)";
-        //    string query = "INSERT INTO [" + where + "] (";
-
-        //    //MessageBox.Show(Hash["Id"].ToString());
-        //    bool first = true;
-        //    int size = 0;
-
-        //    foreach (DictionaryEntry entry in Hash)
-        //    {
-        //        if (first)
-        //        {
-        //            query += "[" + entry.Key.ToString() + "]";
-        //            //MessageBox.Show(entry.Value.GetType().ToString());
-        //            size = ((int[])entry.Value).Length;
-        //        }
-        //        else
-        //            query += ",[" + entry.Key.ToString() + "]";
-        //    }
-
-        //    query += ")";
-
-        //    //"VALUES(@NUM,"
-
-        //    {
-
-        //    }
-
-        //    for (int i = 1; i < size; i++)
-        //    {
-        //        string itos = i.ToString();
-        //        string arg = "@ARG_" + itos;
-        //        /*
-        //        foreach (DictionaryEntry entry in Hash)
-        //        {
-        //            if (first)
-        //                query += "[" + entry.Value.ToString() + "]";
-        //            else
-        //                query += ",[" + entry.Value.ToString() + "]";
-        //        }*/
-        //    }
-
-
-
-
-        //    MessageBox.Show(query);
-        //    //foreach (string name in Hash)
-        //    //{
-
-        //    //}
-
-
-        //    /*
-        //    if ((length = ids.Length) > 0)
-        //    {
-        //        string query = "INSERT INTO [" + where + "] ([" + arg1 + "], [" + arg2 + "])VALUES(@NUM,@VAL0)";
-        //        int i;
-
-        //        if (length > 1)
-        //        {
-        //            for (i = 1; i < length; i++)
-        //                query += ",(@NUM,@VAL" + i.ToString() + ")";
-        //        }
-
-
-        //        using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
-        //        {
-        //            conn.Open();
-        //            SqlCommand cmd = new SqlCommand(query, conn);
-        //            cmd.Parameters.AddWithValue("@NUM", NUM);
-        //            for (i = 0; i < length; i++)
-        //                cmd.Parameters.AddWithValue("@VAL" + i.ToString(), ids[i]);
-
-        //            try
-        //            {
-        //                cmd.ExecuteNonQuery();
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                conn.Close();
-        //                MessageBox.Show(ex.ToString());
-        //            }
-        //            finally
-        //            {
-        //                conn.Close();
-        //            }
-        //        }
-        //    }
-        //    */
-        //}
-
-
         //UPDATES
-
 
         //DELETES
         public static void DeleteManyToMany(int NUM, string where, int[] ids, string arg1, string arg2)
@@ -640,6 +634,9 @@ namespace Diplomaster
                 }
             }
         }
+
+        
+
 
     }
 }

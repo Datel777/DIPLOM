@@ -115,7 +115,7 @@ namespace Diplomaster
             //    return;
             //}
 
-            if (TempPath == null)
+            if (TempPath == null || !File.Exists(TempPath))
             {
                 if (FileExtension == null)
                     TempPath = Path.GetTempPath() + Guid.NewGuid().ToString();
@@ -125,7 +125,7 @@ namespace Diplomaster
                 //MessageBox.Show(TempPath);
                 Extensions.SaveFile(TempPath, Data);
             }
-
+            
             TempProcess = Process.Start(TempPath);
 
             //if (TempProcess == null)

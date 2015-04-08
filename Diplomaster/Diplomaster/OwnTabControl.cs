@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 
+
 namespace Diplomaster
 {
-    class OwnTabControl
+    static class OwnTabControl
     {
         public static void Initialize(TabControl tabcontrol)
         {
@@ -30,7 +31,7 @@ namespace Diplomaster
         }
     }
 
-    class OwnTabPage : TabPage
+    public partial class OwnTabPage : TabPage
     {
         public Color TabColor { get; set; }
 
@@ -39,24 +40,18 @@ namespace Diplomaster
             TabColor = BackColor;
         }
 
+        public OwnTabPage(string text = null)
+        {
+            TabColor = BackColor;
+            if (text == null)
+                Text = "";
+            else
+                Text = text;
+        }
+
         public void ResetTabColor()
         {
             TabColor = BackColor;
         }
-
-        //public OwnTreeNode(bool b)
-        //{
-        //    hideCheck = b;
-        //}
-        //public OwnTreeNode(string str)
-        //{
-        //    Text = str;
-        //    hideCheck = false;
-        //}
-        //public OwnTreeNode(string str, bool b)
-        //{
-        //    Text = str;
-        //    hideCheck = b;
-        //}
     }
 }

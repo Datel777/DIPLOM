@@ -76,7 +76,7 @@ namespace Diplomaster
         }
     }
 
-    class OwnTreeNode : TreeNode
+    public class OwnTreeNode : TreeNode
     {
         public bool hideCheck { get; set; }
 

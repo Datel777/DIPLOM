@@ -30,13 +30,7 @@
         {
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.tabArchive = new Diplomaster.OwnTabPage();
-            this.buttonAddFile = new System.Windows.Forms.Button();
-            this.buttonDown = new System.Windows.Forms.Button();
-            this.buttonUp = new System.Windows.Forms.Button();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.tabStages = new Diplomaster.OwnTabPage();
-            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabContract = new Diplomaster.OwnTabPage();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -80,11 +74,17 @@
             this.label16 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.tabControlMain = new System.Windows.Forms.TabControl();
-            this.tabArchive.SuspendLayout();
-            this.tabStages.SuspendLayout();
-            this.tabContract.SuspendLayout();
+            this.tabStages = new Diplomaster.OwnTabPage();
+            this.tabControlStages = new System.Windows.Forms.TabControl();
+            this.tabArchive = new Diplomaster.OwnTabPage();
+            this.buttonAddFile = new System.Windows.Forms.Button();
+            this.buttonDown = new System.Windows.Forms.Button();
+            this.buttonUp = new System.Windows.Forms.Button();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tabControlMain.SuspendLayout();
+            this.tabContract.SuspendLayout();
+            this.tabStages.SuspendLayout();
+            this.tabArchive.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -109,86 +109,20 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // tabArchive
+            // tabControlMain
             // 
-            this.tabArchive.BackColor = System.Drawing.SystemColors.Control;
-            this.tabArchive.Controls.Add(this.buttonAddFile);
-            this.tabArchive.Controls.Add(this.buttonDown);
-            this.tabArchive.Controls.Add(this.buttonUp);
-            this.tabArchive.Controls.Add(this.flowLayoutPanel1);
-            this.tabArchive.Location = new System.Drawing.Point(4, 22);
-            this.tabArchive.Name = "tabArchive";
-            this.tabArchive.Padding = new System.Windows.Forms.Padding(3);
-            this.tabArchive.Size = new System.Drawing.Size(900, 494);
-            this.tabArchive.TabColor = System.Drawing.SystemColors.Control;
-            this.tabArchive.TabIndex = 1;
-            this.tabArchive.Text = "Архив";
-            // 
-            // buttonAddFile
-            // 
-            this.buttonAddFile.Location = new System.Drawing.Point(599, 6);
-            this.buttonAddFile.Name = "buttonAddFile";
-            this.buttonAddFile.Size = new System.Drawing.Size(75, 23);
-            this.buttonAddFile.TabIndex = 21;
-            this.buttonAddFile.Text = "Добавить";
-            this.buttonAddFile.UseVisualStyleBackColor = true;
-            this.buttonAddFile.Click += new System.EventHandler(this.buttonAddFile_Click);
-            // 
-            // buttonDown
-            // 
-            this.buttonDown.Enabled = false;
-            this.buttonDown.Font = new System.Drawing.Font("Wingdings 3", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            this.buttonDown.Location = new System.Drawing.Point(563, 42);
-            this.buttonDown.Name = "buttonDown";
-            this.buttonDown.Size = new System.Drawing.Size(30, 30);
-            this.buttonDown.TabIndex = 20;
-            this.buttonDown.Text = "q";
-            this.buttonDown.UseVisualStyleBackColor = true;
-            this.buttonDown.Click += new System.EventHandler(this.buttonDown_Click);
-            // 
-            // buttonUp
-            // 
-            this.buttonUp.Enabled = false;
-            this.buttonUp.Font = new System.Drawing.Font("Wingdings 3", 16F);
-            this.buttonUp.Location = new System.Drawing.Point(563, 6);
-            this.buttonUp.Name = "buttonUp";
-            this.buttonUp.Size = new System.Drawing.Size(30, 30);
-            this.buttonUp.TabIndex = 19;
-            this.buttonUp.Text = "p";
-            this.buttonUp.UseVisualStyleBackColor = true;
-            this.buttonUp.Click += new System.EventHandler(this.buttonUp_Click);
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.flowLayoutPanel1.AutoScroll = true;
-            this.flowLayoutPanel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(537, 494);
-            this.flowLayoutPanel1.TabIndex = 18;
-            this.flowLayoutPanel1.Click += new System.EventHandler(this.flowLayoutPanel1_Click);
-            // 
-            // tabStages
-            // 
-            this.tabStages.BackColor = System.Drawing.SystemColors.Control;
-            this.tabStages.Controls.Add(this.tabControl2);
-            this.tabStages.Location = new System.Drawing.Point(4, 22);
-            this.tabStages.Name = "tabStages";
-            this.tabStages.Padding = new System.Windows.Forms.Padding(3);
-            this.tabStages.Size = new System.Drawing.Size(900, 494);
-            this.tabStages.TabColor = System.Drawing.SystemColors.Control;
-            this.tabStages.TabIndex = 2;
-            this.tabStages.Text = "Этапы";
-            // 
-            // tabControl2
-            // 
-            this.tabControl2.Location = new System.Drawing.Point(0, 0);
-            this.tabControl2.Name = "tabControl2";
-            this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(588, 320);
-            this.tabControl2.TabIndex = 0;
+            this.tabControlMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControlMain.Controls.Add(this.tabContract);
+            this.tabControlMain.Controls.Add(this.tabStages);
+            this.tabControlMain.Controls.Add(this.tabArchive);
+            this.tabControlMain.Location = new System.Drawing.Point(0, 0);
+            this.tabControlMain.Name = "tabControlMain";
+            this.tabControlMain.SelectedIndex = 0;
+            this.tabControlMain.Size = new System.Drawing.Size(908, 520);
+            this.tabControlMain.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.tabControlMain.TabIndex = 18;
             // 
             // tabContract
             // 
@@ -247,7 +181,7 @@
             // 
             this.dateTimePicker1.Location = new System.Drawing.Point(170, 314);
             this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(142, 20);
+            this.dateTimePicker1.Size = new System.Drawing.Size(203, 20);
             this.dateTimePicker1.TabIndex = 16;
             this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
             this.dateTimePicker1.DropDown += new System.EventHandler(this.dateTimePicker1_DropDown);
@@ -407,7 +341,7 @@
             // 
             this.dateTimePicker2.Location = new System.Drawing.Point(170, 340);
             this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(142, 20);
+            this.dateTimePicker2.Size = new System.Drawing.Size(203, 20);
             this.dateTimePicker2.TabIndex = 16;
             this.dateTimePicker2.ValueChanged += new System.EventHandler(this.dateTimePicker2_ValueChanged);
             this.dateTimePicker2.DropDown += new System.EventHandler(this.dateTimePicker2_DropDown);
@@ -592,19 +526,91 @@
             this.label17.TabIndex = 0;
             this.label17.Text = "Фактическая Трудоёмкость";
             // 
-            // tabControlMain
+            // tabStages
             // 
-            this.tabControlMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tabStages.BackColor = System.Drawing.SystemColors.Control;
+            this.tabStages.Controls.Add(this.tabControlStages);
+            this.tabStages.Location = new System.Drawing.Point(4, 22);
+            this.tabStages.Name = "tabStages";
+            this.tabStages.Padding = new System.Windows.Forms.Padding(3);
+            this.tabStages.Size = new System.Drawing.Size(900, 494);
+            this.tabStages.TabColor = System.Drawing.SystemColors.Control;
+            this.tabStages.TabIndex = 2;
+            this.tabStages.Text = "Этапы";
+            // 
+            // tabControlStages
+            // 
+            this.tabControlStages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControlMain.Controls.Add(this.tabContract);
-            this.tabControlMain.Controls.Add(this.tabStages);
-            this.tabControlMain.Controls.Add(this.tabArchive);
-            this.tabControlMain.Location = new System.Drawing.Point(0, 0);
-            this.tabControlMain.Name = "tabControlMain";
-            this.tabControlMain.SelectedIndex = 0;
-            this.tabControlMain.Size = new System.Drawing.Size(908, 520);
-            this.tabControlMain.TabIndex = 18;
+            this.tabControlStages.Location = new System.Drawing.Point(0, 6);
+            this.tabControlStages.Name = "tabControlStages";
+            this.tabControlStages.SelectedIndex = 0;
+            this.tabControlStages.Size = new System.Drawing.Size(904, 492);
+            this.tabControlStages.TabIndex = 0;
+            this.tabControlStages.SelectedIndexChanged += new System.EventHandler(this.tabControlStages_SelectedIndexChanged);
+            this.tabControlStages.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tabControlStages_MouseClick);
+            // 
+            // tabArchive
+            // 
+            this.tabArchive.BackColor = System.Drawing.SystemColors.Control;
+            this.tabArchive.Controls.Add(this.buttonAddFile);
+            this.tabArchive.Controls.Add(this.buttonDown);
+            this.tabArchive.Controls.Add(this.buttonUp);
+            this.tabArchive.Controls.Add(this.flowLayoutPanel1);
+            this.tabArchive.Location = new System.Drawing.Point(4, 22);
+            this.tabArchive.Name = "tabArchive";
+            this.tabArchive.Padding = new System.Windows.Forms.Padding(3);
+            this.tabArchive.Size = new System.Drawing.Size(900, 494);
+            this.tabArchive.TabColor = System.Drawing.SystemColors.Control;
+            this.tabArchive.TabIndex = 1;
+            this.tabArchive.Text = "Архив";
+            // 
+            // buttonAddFile
+            // 
+            this.buttonAddFile.Location = new System.Drawing.Point(599, 6);
+            this.buttonAddFile.Name = "buttonAddFile";
+            this.buttonAddFile.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddFile.TabIndex = 21;
+            this.buttonAddFile.Text = "Добавить";
+            this.buttonAddFile.UseVisualStyleBackColor = true;
+            this.buttonAddFile.Click += new System.EventHandler(this.buttonAddFile_Click);
+            // 
+            // buttonDown
+            // 
+            this.buttonDown.Enabled = false;
+            this.buttonDown.Font = new System.Drawing.Font("Wingdings 3", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.buttonDown.Location = new System.Drawing.Point(563, 42);
+            this.buttonDown.Name = "buttonDown";
+            this.buttonDown.Size = new System.Drawing.Size(30, 30);
+            this.buttonDown.TabIndex = 20;
+            this.buttonDown.Text = "q";
+            this.buttonDown.UseVisualStyleBackColor = true;
+            this.buttonDown.Click += new System.EventHandler(this.buttonDown_Click);
+            // 
+            // buttonUp
+            // 
+            this.buttonUp.Enabled = false;
+            this.buttonUp.Font = new System.Drawing.Font("Wingdings 3", 16F);
+            this.buttonUp.Location = new System.Drawing.Point(563, 6);
+            this.buttonUp.Name = "buttonUp";
+            this.buttonUp.Size = new System.Drawing.Size(30, 30);
+            this.buttonUp.TabIndex = 19;
+            this.buttonUp.Text = "p";
+            this.buttonUp.UseVisualStyleBackColor = true;
+            this.buttonUp.Click += new System.EventHandler(this.buttonUp_Click);
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.flowLayoutPanel1.AutoScroll = true;
+            this.flowLayoutPanel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(537, 494);
+            this.flowLayoutPanel1.TabIndex = 18;
+            this.flowLayoutPanel1.Click += new System.EventHandler(this.flowLayoutPanel1_Click);
             // 
             // FormDocument
             // 
@@ -616,11 +622,11 @@
             this.Controls.Add(this.button1);
             this.Name = "FormDocument";
             this.Text = "ДОГОВОР";
-            this.tabArchive.ResumeLayout(false);
-            this.tabStages.ResumeLayout(false);
+            this.tabControlMain.ResumeLayout(false);
             this.tabContract.ResumeLayout(false);
             this.tabContract.PerformLayout();
-            this.tabControlMain.ResumeLayout(false);
+            this.tabStages.ResumeLayout(false);
+            this.tabArchive.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -631,7 +637,7 @@
         private System.Windows.Forms.Button button2;
         private OwnTabPage tabArchive;
         private OwnTabPage tabStages;
-        private System.Windows.Forms.TabControl tabControl2;
+        private System.Windows.Forms.TabControl tabControlStages;
         private OwnTabPage tabContract;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
