@@ -16,15 +16,36 @@ namespace Diplomaster
     public partial class UserControlFormStage : UserControl
     {
         Hashtable DATA = new Hashtable();
-        int Id = -1;
+        public int Id = -1;
 
-        public UserControlFormStage(Hashtable data)
+        public bool validnum = false;
+
+        FormDocument FormDocParent;
+        private string oldnumber;
+        public string number {get { return textBox1.Text; }}
+        public DateTime date1 { get { return dateTimePicker1.Value; } }
+        public DateTime date2 { get { return dateTimePicker2.Value; } }
+        public string count { get { return textBox7.Text; } }
+        public string price { get { return textBox8.Text; } }
+        public string model { get { return textBox10.Text; } }
+        public string zak { get { return textBox4.Text; } }
+        public string avans { get { return textBox2.Text; } }
+        public string raschet { get { return textBox3.Text; } }
+        public string trud1 { get { return textBox13.Text; } }
+        public string trud2 { get { return textBox14.Text; } }
+        public string state { get { return textBox5.Text; } }
+        public string act { get { return textBox6.Text; } }
+        public string ud { get { return textBox9.Text; } }
+
+        public UserControlFormStage(FormDocument parent, Hashtable data)
         {
             InitializeComponent();
             DATA = data;
+            FormDocParent = parent;
 
             if (DATA != null) {
                 Id = (int)DATA["Id"];
+                validnum = true;
                 Fill.TextBoxInt(textBox1, DATA["Номер"]);
                 Fill.DateTimePicker(dateTimePicker1, DATA["Начало работ"]);
                 Fill.DateTimePicker(dateTimePicker2, DATA["Окончание работ"]);
@@ -43,6 +64,7 @@ namespace Diplomaster
                 Fill.DateTimePicker(dateTimePicker1, null);
                 Fill.DateTimePicker(dateTimePicker2, null);
             }
+            oldnumber = number;
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
@@ -101,5 +123,36 @@ namespace Diplomaster
 
             return Check;
         }
+
+        public static string GetValueString(int i)
+        {
+            string itos = i.ToString();
+            /*
+            ([Id], [Договор_id], [Номер], [Начало работ], [Окончание работ], [Количество], 
+            [Цена], [Модель цены], [Заключение], [Аванс], [Расчёт], [Плановая трудоёмкость], 
+            [Фактическая трудоёмкость], [Текущее состояние], [Номер акта], [Номер удостоверения])
+            */
+
+            return "@ID" + itos + ",@NUM,@NUMBER" + itos + ",@SDATE" + itos + ",@EDATE" + itos +",@COUNT" + itos +
+                ",@PRICE" + itos + ",@MODEL" + itos + ",@ZAK" + itos + ",@AVANS" + itos + ",@RAS" + itos + 
+                ",@PTRUD" + itos + ",@FTRUD" + itos + ",@STATE" + itos + ",@ACT" + itos + ",@UD" + itos;
+        }
+
+        private void textBox1_LostFocus(object sender, EventArgs e)
+        {
+            if (oldnumber != number)
+            {
+                oldnumber = number;
+                if (validnum = Validator.Apply(label1, textBox1, typeof(uint)))
+                {
+                    ((TabPage)Parent).Text = Global.StageTextPrefix + textBox1.Text;
+                    FormDocParent.ReorderStageTab((TabPage)Parent, Convert.ToInt32(textBox1.Text));
+                }
+                else
+                    ((TabPage)Parent).Text = Global.EmptyStageText;
+            }
+        }
+
+
     }
 }

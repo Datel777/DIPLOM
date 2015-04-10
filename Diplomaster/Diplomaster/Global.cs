@@ -25,6 +25,8 @@ namespace Diplomaster
         public static string LoadNodeName = "<<LOAD DATA>>";
         //public static string ConnectionString = @"Data Source = ..\..\Database.sdf";
         //public static string ConnectionString = @"Data Source = ..\..\..\connection.udl";
+        public static string EmptyStageText = "Этап ----";
+        public static string StageTextPrefix = "Этап №";
 
         public static string ConnectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\DataBase.mdf;Integrated Security=True";
         //public static string ConnectionString = @"Server=(LocalDB)\MSSQLLocalDB; Integrated Security=true ;AttachDbFileName=C:\Users\самсунг\Documents\МГИУ\DIPLOM-git\DIPLOM\Diplomaster\Diplomaster\DataBase.mdf";

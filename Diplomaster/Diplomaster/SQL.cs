@@ -86,8 +86,7 @@ namespace Diplomaster
             if (arg1 != null)
                 query += " WHERE [" + arg1 + "] = @ARG1";
 
-            query += " ORDER BY [" + order + "] ";
-            query += asc ? "ASC" : "DESC";
+            query += " ORDER BY [" + order + "] " + (asc ? "ASC" : "DESC");
 
             using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
             {
@@ -378,11 +377,14 @@ namespace Diplomaster
             return data;
         }
 
-        public static List<Hashtable> ReadAllMultiple(string where, string arg1, object val1)
+        public static List<Hashtable> ReadAllMultiple(string where, string arg1, object val1, string orderby = null, bool asc = true)
         {
             List<Hashtable> result = new List<Hashtable>();
 
             string query = "SELECT * FROM [" + where + "] WHERE [" + arg1 + "]=@ARG1";
+            
+            if (orderby != null)
+                query += " ORDER BY [" + orderby + "] " + (asc ? "ASC" : "DESC");
 
             using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
             {
@@ -394,7 +396,7 @@ namespace Diplomaster
                         conn.Open();
                         using (SqlDataReader rdr = cmd.ExecuteReader())
                         {
-                            if (rdr.Read())
+                            while (rdr.Read())
                             {
                                 Hashtable data = new Hashtable();
                                 for (int i = 0; i < rdr.FieldCount; i++)
@@ -418,14 +420,16 @@ namespace Diplomaster
             return result;
         }
 
-        public static int[] ReadManyToMany(string where, string what, string arg1, int id1, string orderby = null)
+        public static int[] ReadManyToMany(string where, string what, string arg1, int id1, string orderby = null, bool asc = true)
         {
             List<int> result = new List<int>();
             
             string query = "SELECT [" + what + "] FROM [" + where + "] WHERE [" + arg1 + "] = @ID";
 
             if (orderby != null)
-                query += " ORDER BY [" + orderby + "] ASC";
+                query += " ORDER BY [" + orderby + "] " + (asc ? "ASC" : "DESC");
+
+
 
             using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
             {

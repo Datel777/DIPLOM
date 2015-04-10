@@ -24,30 +24,17 @@ namespace Diplomaster
         OwnTabPage lastTabPage = new OwnTabPage("+");
 
         public UserControlFileEdit FlowSelected;
-        /*
-        public void FillTabControlStages(TabControl tabC)
-        {
-            int[] ids = (int[])DATA["Этап договора"];
 
-            if (ids != null && ids.Length > 0)
-                foreach (int id in ids)
-                    tabC.Controls.Add(CreateNewStagePage(id));
-            else
-                tabC.Controls.Add(CreateNewStagePage());
-
-            tabC.Controls.Add(lastTabPage);
-        }
-        */
         public TabPage CreateNewStagePage(Hashtable data = null)
         {
             OwnTabPage page;
             UserControl myUserControl;
             
             if (data == null)
-                page = new OwnTabPage("Этап ----");
+                page = new OwnTabPage(Global.EmptyStageText);
             else
-                page = new OwnTabPage("Этап № " + data["Id"].ToString());
-            myUserControl = new UserControlFormStage(data);
+                page = new OwnTabPage(Global.StageTextPrefix + data["Номер"].ToString());
+            myUserControl = new UserControlFormStage(this, data);
 
             myUserControl.Dock = DockStyle.Fill;
             page.Controls.Add(myUserControl);
@@ -55,60 +42,6 @@ namespace Diplomaster
             return page;
         }
         
-        /*
-        public void ReadDoc()
-        {
-            string query = "SELECT * FROM [Договор] WHERE [Номер]=@NUM";
-
-            using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@NUM", DocNumber);
-                    try
-                    {
-                        conn.Open();
-                        using (SqlDataReader rdr = cmd.ExecuteReader())
-                        {
-                            if (rdr.Read())
-                            {
-                                //DATA
-                                //MessageBox.Show(Convert.ToString(rdr.FieldCount));
-                                //string str = "";
-                                for (int i = 0; i < rdr.FieldCount; i++)
-                                {
-                                    //str += "[" + rdr.GetName(i) + "] " + Convert.ToString(rdr.GetValue(i))+"\n";
-                                    DATA.Add(rdr.GetName(i), rdr.GetValue(i));
-                                    
-                                    //if (rdr.GetName(i) == "Изображение1")
-                                        //MessageBox.Show(rdr.GetName(i) + " = " + Encoding.Default.GetString((byte[])rdr.GetValue(i)));
-                                    //if (rdr.GetName(i) == "Начало Работ")
-                                    //MessageBox.Show(rdr.GetName(i) + " = " + rdr.GetValue(i).ToString());
-                                    //MessageBox.Show("["+rdr.GetName(i)+"]" + " = " + DATA[rdr.GetName(i)].ToString());
-                                    //MessageBox.Show("[" + rdr.GetName(i) + "]" + "(" + DATA[rdr.GetName(i)].GetType()+")"+" = " + DATA[rdr.GetName(i)].ToString());
-                                }
-
-                                //MessageBox.Show(str);
-                                //MessageBox.Show(Convert.ToString(DATA["Изображение1"].GetType()));
-                                //ReadElement(rdr);
-                            }
-                            rdr.Close();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.ToString());
-                    }
-                    finally
-                    {
-                        conn.Close();
-                    }
-
-                }
-            }
-        }
-        */
-
         public void SelectCombo(ComboBox combo, object val)
         {
             //MessageBox.Show(val.ToString());
@@ -144,21 +77,6 @@ namespace Diplomaster
             foreach (int id in indexes)
                 list.SetSelected(id, true);
         }
-
-
-        //public void FillImageSet(TextBox textBoxName, TextBox textBoxPath, Button chooseButton, Button downloadButton, Button deleteButton, object data, object filename)
-        //{
-
-        //    if (data.isnull()) {
-        //        textBoxName.Text = "";
-        //        downloadButton.Enabled = false;
-        //        deleteButton.Enabled = false;
-        //    } else {
-        //        textBoxName.Text = (string)filename;
-        //        downloadButton.Enabled = true;
-        //        deleteButton.Enabled = true;
-        //    }
-        //}
 
         public void FillAll()
         {
@@ -293,9 +211,10 @@ namespace Diplomaster
         {
             List<int> ids = new List<int>();
 
-            foreach (Hashtable data in SQL.ReadAllMultiple("Этап договора", "Договор_id", DocNumber))
+            foreach (Hashtable data in SQL.ReadAllMultiple("Этап договора", "Договор_id", DocNumber, "Номер"))
             {
                 ids.Add((int)data["Id"]);
+                //MessageBox.Show("lll = " + data["Id"].ToString());
                 tabControlStages.Controls.Add(CreateNewStagePage(data));
             }
 
@@ -355,11 +274,6 @@ namespace Diplomaster
                 NewStages();
                 button2.Hide();
             }
-
-            //FillTabControlStages(tabControlStages);
-
-
-            //SaveFlowFiles(DocNumber);
         }
 
         public void SelectFileEdit(UserControlFileEdit uc)
@@ -437,22 +351,30 @@ namespace Diplomaster
 
             if (length > 0)
             {
-                string query = "MERGE INTO [Файл договора] USING ( ";
+                string query = "MERGE INTO [Файл договора] USING (";
                 //"VALUES (@ID0,@NUM,@FILE0,@FILENAME0,@ORD0)";
-                string itos;
+                //string itos;
 
                 i = 0;
                 foreach (UserControlFileEdit uc in flowLayoutPanel1.Controls)
                 {
                     if (!uc.Remove)
                     {
+                        //if (i == 0)
+                        //    query += "VALUES (@ID0,@NUM,@FILE0,@FILENAME0,@ORD0)";
+                        //else
+                        //{
+                        //    itos = i.ToString();
+                        //    query += ", (@ID" + itos + ",@NUM,@FILE" + itos + ",@FILENAME" + itos + ",@ORD" + itos + ")";
+                        //}
+
                         if (i == 0)
-                            query += "VALUES (@ID0,@NUM,@FILE0,@FILENAME0,@ORD0)";
+                            query += "VALUES(";
                         else
-                        {
-                            itos = i.ToString();
-                            query += ", (@ID" + itos + ",@NUM,@FILE" + itos + ",@FILENAME" + itos + ",@ORD" + itos + ")";
-                        }
+                            query += ",(";
+
+                        query += UserControlFileEdit.GetValueString(i) + ")";
+
                         i++;
                     }
                 }
@@ -465,7 +387,7 @@ namespace Diplomaster
                     "INSERT([Договор_id],[Файл],[Название],[Порядок]) " +
                         "VALUES([Договор_id],[Файл],[Название],[Порядок]);";
                 if (Dels.Count > 0)
-                    query = "DELETE FROM [Файл договора] WHERE [Id] IN @DELS; ";
+                    query += "DELETE FROM [Файл договора] WHERE [Id] IN @DELS;";
 
                 using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
                 {
@@ -481,18 +403,21 @@ namespace Diplomaster
                     {
                         if (!uc.Remove)
                         {
-                            itos = i.ToString();
+                            //itos = i.ToString();
 
-                            cmd.Parameters.AddWithValue("@ID" + itos, uc.Id);
+                            //cmd.Parameters.AddWithValue("@ID" + itos, uc.Id);
 
-                            cmd.Parameters.Add("@FILE" + itos, SqlDbType.Image);
-                            if (uc.Id==-1)
-                                cmd.Parameters["@FILE" + itos].Value = CheckNull.File(uc.Data);
-                            else
-                                cmd.Parameters["@FILE" + itos].Value = DBNull.Value;
+                            //cmd.Parameters.Add("@FILE" + itos, SqlDbType.Image);
+                            //if (uc.Id==-1)
+                            //    cmd.Parameters["@FILE" + itos].Value = CheckNull.File(uc.Data);
+                            //else
+                            //    cmd.Parameters["@FILE" + itos].Value = DBNull.Value;
 
-                            cmd.Parameters.AddWithValue("@FILENAME" + itos, uc.GetFileName());
-                            cmd.Parameters.AddWithValue("@ORD" + itos, i);
+                            //cmd.Parameters.AddWithValue("@FILENAME" + itos, uc.GetFileName());
+                            //cmd.Parameters.AddWithValue("@ORD" + itos, i);
+
+                            cmd.Parameters.AddUserControl(uc, i);
+
                             i++;
                         }
                     }
@@ -541,6 +466,155 @@ namespace Diplomaster
                 }
             }
 
+        }
+
+        private void SaveStages(int NUM)
+        {
+            /*
+            MERGE INTO [Этап договора]
+                USING (
+                        VALUES (4, 1, NULL, 'TESTER1SSS.txt', 1), 
+                                (-1, 1, NULL, 'TESTER3.txt', 2)
+                        ) AS source ([Id], [Договор_id], [Номер], [Начало работ], [Окончание работ], [Количество], 
+                                    [Цена], [Модель цены], [Заключение], [Аванс], [Расчёт], [Плановая трудоёмкость], 
+                                    [Фактическая трудоёмкость], [Текущее состояние], [Номер акта], [Номер удостоверения])
+                    ON [Этап договора].[Id] = source.[Id]
+            WHEN MATCHED THEN
+                UPDATE SET [Номер] = source.[Номер], [Начало работ] = source.[Начало работ], [Окончание работ] = source.[Окончание работ], 
+                           [Количество] = source.[Количество], [Цена] = source.[Цена], [Модель цены] = source.[Модель цены], 
+                           [Заключение] = source.[Заключение], [Аванс] = source.[Аванс], [Расчёт] = source.[Расчёт], 
+                           [Плановая трудоёмкость] = source.[Плановая трудоёмкость], [Фактическая трудоёмкость] = source.[Фактическая трудоёмкость], 
+                           [Текущее состояние] = source.[Текущее состояние], [Номер акта] = source.[Номер акта], 
+                           [Номер удостоверения] = source.[Номер удостоверения]
+            WHEN NOT MATCHED THEN
+                INSERT ([Договор_id], [Номер], [Начало работ], [Окончание работ], [Количество], 
+                        [Цена], [Модель цены], [Заключение], [Аванс], [Расчёт], [Плановая трудоёмкость], 
+                        [Фактическая трудоёмкость], [Текущее состояние], [Номер акта], [Номер удостоверения])
+                    VALUES ([Договор_id], [Номер], [Начало работ], [Окончание работ], [Количество], 
+                            [Цена], [Модель цены], [Заключение], [Аванс], [Расчёт], [Плановая трудоёмкость], 
+                            [Фактическая трудоёмкость], [Текущее состояние], [Номер акта], [Номер удостоверения]);
+            */
+
+            int length = 0, i;
+
+            List<int> Dels = ((IEnumerable)DATA["Этап договора"]).OfType<int>().ToList();
+
+            foreach (OwnTabPage tab in tabControlStages.TabPages)
+            {
+                if (tab != lastTabPage)
+                {
+                    UserControlFormStage uc = (UserControlFormStage)tab.Controls[0];
+                    if (uc.Id != -1)
+                        Dels.Remove(uc.Id);
+                    length++;
+                }
+            }
+
+            if (length > 0)
+            {
+                string query = "MERGE INTO [Этап договора] USING (";
+
+                i = 0;
+
+                foreach (TabPage tab in tabControlStages.TabPages)
+                {
+                    if (tab != lastTabPage) 
+                    {
+                        UserControlFormStage uc = (UserControlFormStage)tab.Controls[0];
+                        if (i == 0)
+                            query += "VALUES(";
+                        else
+                            query += ",(";
+
+                        query += UserControlFormStage.GetValueString(i) + ")";
+
+                        i++;
+                    }
+                }
+
+                query += ")AS source([Id],[Договор_id],[Номер],[Начало работ],[Окончание работ],[Количество]," +
+                                    "[Цена],[Модель цены],[Заключение],[Аванс],[Расчёт],[Плановая трудоёмкость]," + 
+                                    "[Фактическая трудоёмкость],[Текущее состояние],[Номер акта],[Номер удостоверения])" +
+                    "ON [Этап договора].[Id]=source.[Id] " +
+                    "WHEN MATCHED THEN UPDATE SET [Номер]=source.[Номер],[Начало работ]=source.[Начало работ],[Окончание работ]=source.[Окончание работ]," +
+                           "[Количество]=source.[Количество],[Цена]=source.[Цена],[Модель цены]=source.[Модель цены]," +
+                           "[Заключение]=source.[Заключение],[Аванс]=source.[Аванс],[Расчёт]=source.[Расчёт]," +
+                           "[Плановая трудоёмкость]=source.[Плановая трудоёмкость],[Фактическая трудоёмкость]=source.[Фактическая трудоёмкость]," +
+                           "[Текущее состояние]=source.[Текущее состояние],[Номер акта]=source.[Номер акта]," +
+                           "[Номер удостоверения] = source.[Номер удостоверения] " +
+                "WHEN NOT MATCHED THEN INSERT([Договор_id],[Номер],[Начало работ],[Окончание работ],[Количество]," +
+                        "[Цена],[Модель цены],[Заключение],[Аванс],[Расчёт],[Плановая трудоёмкость]," +
+                        "[Фактическая трудоёмкость],[Текущее состояние],[Номер акта],[Номер удостоверения])" +
+                    "VALUES([Договор_id],[Номер],[Начало работ],[Окончание работ],[Количество]," +
+                            "[Цена],[Модель цены],[Заключение],[Аванс],[Расчёт],[Плановая трудоёмкость]," +
+                            "[Фактическая трудоёмкость],[Текущее состояние],[Номер акта],[Номер удостоверения]);";
+                if (Dels.Count > 0)
+                    query += "DELETE FROM [Этап договора] WHERE [Id] IN @DELS;";
+
+                using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@NUM", NUM);
+
+                    if (Dels.Count > 0)
+                        cmd.AddArrayParameters("@DELS", Dels);
+
+                    i = 0;
+
+                    foreach (TabPage tab in tabControlStages.TabPages)
+                    {
+                        if (tab != lastTabPage)
+                        {
+                            UserControlFormStage uc = (UserControlFormStage)tab.Controls[0];
+                            cmd.Parameters.AddUserControl(uc, i);
+                            i++;
+                        }
+                    }
+                    try
+                    {
+                        cmd.ExecuteNonQuery().ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        conn.Close();
+                        MessageBox.Show(ex.ToString());
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                }
+            }
+            else // ------------- ELSE -------------
+            {
+                if (Dels.Count > 0)
+                {
+                    string query = "DELETE FROM [Этап договора] WHERE [Id] IN @DELS;";
+
+                    using (SqlConnection conn = new SqlConnection(Global.ConnectionString))
+                    {
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand(query, conn);
+
+                        cmd.AddArrayParameters("@DELS", Dels);
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            conn.Close();
+                            MessageBox.Show(ex.ToString());
+                        }
+                        finally
+                        {
+                            conn.Close();
+                        }
+                    }
+                }
+            }
+            
         }
 
         private bool ValidateDoc(out int NUM)
@@ -609,8 +683,6 @@ namespace Diplomaster
 
             return Check;
         }
-
-        
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -711,7 +783,10 @@ namespace Diplomaster
                 SaveManyToMany(NUM, "Иностранный заказчик", listBox1.GetListBoxSelected(), "Договор_id", "Юридическое лицо_id");
                 SaveManyToMany(NUM, "Исполнитель договора", listBox2.GetListBoxSelected(), "Договор_id", "Юридическое лицо_id");
 
+
                 SaveFlowFiles(NUM);
+                SaveStages(NUM);
+
 
                 this.Close();
             }
@@ -827,7 +902,7 @@ namespace Diplomaster
                 {
                     if (openFileDialog1.FileName != null)
                     {
-                        AddFile(openFileDialog1.FileName);
+                        AddFlowFile(openFileDialog1.FileName);
                     }
                     Global.LastDirectoryPath = Path.GetDirectoryName(openFileDialog1.FileName);
 
@@ -839,7 +914,7 @@ namespace Diplomaster
             }
         }
 
-        private void AddFile(string path)
+        private void AddFlowFile(string path)
         {
             UserControlFileEdit newControl = new UserControlFileEdit(this, Path.GetFileName(path));
             newControl.Data = Extensions.LoadFile(path);
@@ -859,10 +934,16 @@ namespace Diplomaster
                         {
                             TabPage tab = tabControlStages.TabPages[i];
 
-                            //if (tab!=firstTabPage && tab!=lastTabPage)
                             if (tab != lastTabPage)
-                                tabControlStages.TabPages.Remove(tab);
-                            //this.contextMenuStrip1.Show(this.tabControl1, e.Location);
+                            {
+                                var result = MessageBox.Show("Вы действительно хотите удалить \"" + tab.Text + "\"?",
+                                         "Удаление этапа",
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question);
+
+                                if (result == DialogResult.Yes)
+                                    tabControlStages.TabPages.Remove(tab);
+                            }
                         }
                     }
             }
@@ -878,6 +959,48 @@ namespace Diplomaster
                 tabControlStages.SelectedTab = page;
             }
 
+        }
+
+        public void ReorderStageTab(TabPage insertTab, int num)
+        {
+            if (tabControlStages.TabCount > 2)
+            {
+                int i = 0;
+                int c = 0;
+
+                foreach (TabPage tab in tabControlStages.TabPages)
+                {
+                    if (tab == lastTabPage)
+                    {
+                        tabControlStages.TabPages.Remove(insertTab);
+                        tabControlStages.TabPages.Insert(c, insertTab);
+                        tabControlStages.SelectTab(insertTab);
+                        break;
+                    }
+                    else
+                    {
+                        if (insertTab != tab)
+                        {
+                            UserControlFormStage uc = (UserControlFormStage)tab.Controls[0];
+                            if (uc.validnum)
+                            {
+                                c = i;
+                                if (Convert.ToInt32(uc.number) >= num)
+                                {
+                                    tabControlStages.TabPages.Remove(insertTab);
+                                    tabControlStages.TabPages.Insert(c, insertTab);
+                                    tabControlStages.SelectTab(insertTab);
+                                    break;
+                                }
+                                else
+                                    c++;
+                            }
+                            i++;
+                        }
+                    }
+
+                }
+            }
         }
 
     }

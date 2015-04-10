@@ -237,5 +237,11 @@ namespace Diplomaster
                 groupBox.BackColor = Global.ColorDefaultBackground;
         }
 
+        public static string GetValueString(int i)
+        {
+            string itos = i.ToString();
+            return "@ID" + itos + ",@NUM,@FILE" + itos + ",@FILENAME" + itos + ",@ORD" + itos;
+        }
+
     }
 }
