@@ -127,6 +127,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormStart";
             this.Text = "Список Договоров";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormStart_Closing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

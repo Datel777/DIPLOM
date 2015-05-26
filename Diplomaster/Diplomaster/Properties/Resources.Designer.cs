@@ -63,9 +63,9 @@ namespace Diplomaster.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap RKSProtonM {
+        internal static System.Drawing.Bitmap LoadScreen {
             get {
-                object obj = ResourceManager.GetObject("RKSProtonM", resourceCulture);
+                object obj = ResourceManager.GetObject("LoadScreen", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

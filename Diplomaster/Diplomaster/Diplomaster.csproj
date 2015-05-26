@@ -106,6 +106,12 @@
     <Compile Include="OwnTreeView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Splash Screen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Splash Screen.Designer.cs">
+      <DependentUpon>Splash Screen.cs</DependentUpon>
+    </Compile>
     <Compile Include="SQL.cs" />
     <Compile Include="UserControlFileEdit.cs">
       <SubType>UserControl</SubType>
@@ -150,6 +156,12 @@
       <DependentUpon>UserControlUchet.cs</DependentUpon>
     </Compile>
     <Compile Include="Validator.cs" />
+    <Compile Include="FormStartOperator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormStartOperator.Designer.cs">
+      <DependentUpon>FormStartOperator.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="FormReportFilter.resx">
       <DependentUpon>FormReportFilter.cs</DependentUpon>
     </EmbeddedResource>
@@ -169,6 +181,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Splash Screen.resx">
+      <DependentUpon>Splash Screen.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControlFileEdit.resx">
       <DependentUpon>UserControlFileEdit.cs</DependentUpon>
     </EmbeddedResource>
@@ -189,6 +204,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControlUchet.resx">
       <DependentUpon>UserControlUchet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormStartOperator.resx">
+      <DependentUpon>FormStartOperator.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="ClassDiagram1.cd" />
     <None Include="ClassDiagram2.cd" />
@@ -238,7 +256,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>DataBase.mdf</DependentUpon>
     </Content>
-    <None Include="Resources\гифки-сделал-сам-роскосмос-протон-м-1250349.gif" />
+    <EmbeddedResource Include="Resources\LoadScreen.gif" />
     <Content Include="Sasha.ico" />
   </ItemGroup>
   <ItemGroup>

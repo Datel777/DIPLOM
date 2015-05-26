@@ -19,6 +19,7 @@ namespace Diplomaster
     {
         public int DocNumber;
         public FormStart FormParent;
+        public FormStartOperator FormParent2;
         public Hashtable DATA = new Hashtable();
 
         OwnTabPage lastTabPage = new OwnTabPage("+");
@@ -275,6 +276,49 @@ namespace Diplomaster
                 button2.Hide();
             }
         }
+
+        public FormDocument(FormStartOperator form1, int num = -1)
+        {
+            //Flow width = user control width + 27
+            InitializeComponent();
+            DocNumber = num;
+            FormParent2 = form1;
+
+            OwnTabControl.Initialize(tabControlMain);
+            OwnTabControl.Initialize(tabControlStages);
+
+            SQL.ReadToCombo(comboBox1, "Юридическое лицо", "Название", "Иностранный", false);
+            SQL.ReadToList(listBox1, "Юридическое лицо", "Название", "Иностранный", true);
+            SQL.ReadToList(listBox2, "Юридическое лицо", "Название");
+
+            if (DocNumber != -1)
+            {
+                Text = "Редактирование Договора №" + DocNumber;
+
+                DATA = SQL.ReadAll("Договор", "Номер", DocNumber);
+
+                ReadManyToMany("Иностранный заказчик", "Юридическое лицо_id", "Договор_id", DocNumber);
+                ReadManyToMany("Исполнитель договора", "Юридическое лицо_id", "Договор_id", DocNumber);
+                //ReadManyToMany("Этап договора", "Id", "Договор_id", DocNumber, "Номер");
+
+                FillAll();
+
+                ReadFlowFiles();
+                ReadStages();
+
+                textBox1.ReadOnly = true;
+                textBox1.BackColor = Global.ColorReadOnly;
+            }
+            else
+            {
+                Fill.DateTimePicker(dateTimePicker1, null);
+                Fill.DateTimePicker(dateTimePicker2, null);
+                NewStages();
+                button2.Hide();
+            }
+        }
+
+
 
         public void SelectFileEdit(UserControlFileEdit uc)
         {
@@ -1002,6 +1046,5 @@ namespace Diplomaster
                 }
             }
         }
-
     }
 }

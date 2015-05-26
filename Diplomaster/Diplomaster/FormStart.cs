@@ -12,6 +12,8 @@ namespace Diplomaster
 {
     public partial class FormStart : Form
     {
+        private Splash_Screen Splash;
+        
         //TabPage firstTabPage = new TabPage("Все");
         TabPage lastTabPage = new TabPage("+");
         int TabNumber = 1;
@@ -146,10 +148,11 @@ namespace Diplomaster
 
         
 
-        public FormStart()
+        public FormStart(Splash_Screen splash)
         {
             //MessageBox.Show("BEGIN INIT");
             InitializeComponent();
+            Splash = splash;
             InitializeTabControl(tabControl1);
             RefreshDocs();
             //MessageBox.Show(Controls["button3"].Text);
@@ -324,5 +327,14 @@ namespace Diplomaster
             if (e.Node.Level==2)
                 CheckOpenForm(Convert.ToInt32(e.Node.Name));
         }
+
+
+
+        private void FormStart_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Splash.Show();
+        }
+
+
     }
 }

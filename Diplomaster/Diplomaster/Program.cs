@@ -26,7 +26,7 @@ namespace Diplomaster
             //MessageBox.Show(Process.EnableRaisingEvents.ToString());
             Global.DocSchema = SQL.LoadSchema("Договор");
 
-            Application.Run(new FormStart());
+            Application.Run(new Splash_Screen());
         }
     }
 }

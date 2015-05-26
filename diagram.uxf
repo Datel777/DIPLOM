@@ -4,7 +4,7 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>612</x>
+      <x>585</x>
       <y>0</y>
       <w>279</w>
       <h>279</h>
@@ -35,7 +35,7 @@ Id: int
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>126</x>
+      <x>99</x>
       <y>0</y>
       <w>288</w>
       <h>351</h>
@@ -72,7 +72,7 @@ bg=orange
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>351</x>
+      <x>324</x>
       <y>522</y>
       <w>225</w>
       <h>126</h>
@@ -92,7 +92,7 @@ Id: int
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>432</x>
+      <x>405</x>
       <y>306</y>
       <w>252</w>
       <h>90</h>
@@ -110,7 +110,7 @@ Id: int
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>585</x>
+      <x>684</x>
       <y>495</y>
       <w>234</w>
       <h>153</h>
@@ -120,7 +120,7 @@ bg=light_gray
 --
 Id: int
 --
-Исполнитель договора_id: belongs_to
+Юридическое лицо_id: belongs_to
 Год: int
 РОТ (Среднемесячный РОТ): money
 Социальное страхование(%): float
@@ -132,7 +132,7 @@ Id: int
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>711</x>
+      <x>684</x>
       <y>288</y>
       <w>243</w>
       <h>153</h>
@@ -154,7 +154,7 @@ Id: int
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>405</x>
+      <x>378</x>
       <y>36</y>
       <w>225</w>
       <h>36</h>
@@ -166,7 +166,7 @@ m1=+</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>882</x>
+      <x>855</x>
       <y>36</y>
       <w>54</w>
       <h>270</h>
@@ -178,7 +178,7 @@ m1=+</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>189</x>
+      <x>162</x>
       <y>342</y>
       <w>180</w>
       <h>216</h>
@@ -190,7 +190,7 @@ m1=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>216</x>
+      <x>189</x>
       <y>342</y>
       <w>63</w>
       <h>126</h>
@@ -202,7 +202,7 @@ m1=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>405</x>
+      <x>378</x>
       <y>234</y>
       <w>144</w>
       <h>90</h>
@@ -214,7 +214,7 @@ m1=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>549</x>
+      <x>522</x>
       <y>387</y>
       <w>27</w>
       <h>153</h>
@@ -226,19 +226,19 @@ m1=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>648</x>
-      <y>387</y>
-      <w>36</w>
-      <h>126</h>
+      <x>540</x>
+      <y>576</y>
+      <w>162</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>m2=1
 m1=+</panel_attributes>
-    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
+    <additional_attributes>160.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>261</x>
+      <x>234</x>
       <y>414</y>
       <w>216</w>
       <h>81</h>
@@ -255,7 +255,7 @@ Id: int
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>468</x>
+      <x>441</x>
       <y>441</y>
       <w>63</w>
       <h>99</h>
@@ -267,7 +267,7 @@ m1=1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>441</x>
+      <x>414</x>
       <y>72</y>
       <w>153</w>
       <h>108</h>
@@ -286,7 +286,7 @@ Id: int
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>405</x>
+      <x>378</x>
       <y>171</y>
       <w>135</w>
       <h>63</h>
@@ -294,5 +294,23 @@ Id: int
     <panel_attributes>m2=*
 m1=1</panel_attributes>
     <additional_attributes>10.0;40.0;130.0;40.0;130.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>108</x>
+      <y>549</y>
+      <w>153</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>Пользователь
+bg=orange
+--
+Id: int
+--
+Имя: nvarchar(50)
+Пароль: nvarchar(100)
+Права: int</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>
